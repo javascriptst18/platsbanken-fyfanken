@@ -1,5 +1,29 @@
-$banana: #fac863;
+$white: #fff;
+$body-background:#efefef;
+body {
+  background-color: $body-background;
+}
 
-.🍌 {
-  background-color: $banana;
+main {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 500px) {
+    flex-direction:row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+article {
+  background-color: $white;
+  padding: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+  flex: 1;
+  &.expanded {
+    min-width: 100%;
+  }
+  @media (min-width: 500px) {
+    min-width: 300px;
+  }
 }
