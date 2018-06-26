@@ -20,4 +20,9 @@ mainContainer.addEventListener('click', function (e) {
         });
         e.target.parentElement.scrollIntoView();
     }
-})
+});
+
+function populateJobAds() {
+    for (let object of searchResultsArr)
+        console.log(object);
+}
