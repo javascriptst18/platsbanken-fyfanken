@@ -4,7 +4,18 @@ const searchBox = document.querySelector( '#searchBox' );
 const searchSubmit = document.querySelector( '#searchSubmit' )
 const numberOfResults = 20; // document.querySelector( '#numberOfResults' );
 
-arr = [];
+// Array med sökningsresultat. Innehåller 10 annonser från Stockholms län när sidan laddas första gången. Uppdateras med search box sökningen när man clickar "Search"
+searchResultsArr = [];
+
+let stockholmTen = function () {
+  fetch( baseURL + matchningURL + 'lanid=1&sida=1&antalrader=10' )
+    .then( response => {
+      return response.json();
+    } )
+    .then( response => {
+      return searchResultsArr = response.matchningslista.matchningdata;
+    } );
+}
 
 let fritextSokning = function ( event ) {
   event.preventDefault();
@@ -19,9 +30,10 @@ let fritextSokning = function ( event ) {
       return response.json();
     } )
     .then( response => {
-      return arr = response.matchningslista.matchningdata;
+      return searchResultsArr = response.matchningslista.matchningdata;
     } );
 
 }
 
 searchSubmit.addEventListener( 'click', fritextSokning );
+stockholmTen();
