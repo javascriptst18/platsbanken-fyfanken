@@ -7,5 +7,6 @@ mainContainer.addEventListener('click', function (e) {
             article.classList.remove('expanded');
         }
         e.target.parentElement.classList.add('expanded');
+        e.target.parentElement.scrollIntoView();
     }
 })
