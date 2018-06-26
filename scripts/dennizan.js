@@ -10,7 +10,7 @@ const numberOfResults = 20; // document.querySelector( '#numberOfResults' );
 searchResultsArr = [];
 
 const fetchStockholmsLan = async (url, matchUrl, parameters) => {
-  const rawResponse = await fetch(`${url}${matchUrl}${parameters}`);
+  const rawResponse = await fetch(url + matchUrl + parameters);
   const responseToJson = await rawResponse.json();
 
   return responseToJson.matchningslista;
