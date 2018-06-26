@@ -1,14 +1,27 @@
 const baseURL = 'http://api.arbetsformedlingen.se/af/v0/';
 const matchningURL = 'platsannonser/matchning?';
+const searchBox = document.querySelector( '#searchBox' );
+const searchSubmit = document.querySelector( '#searchSubmit' )
+const numberOfResults = 20; // document.querySelector( '#numberOfResults' );
 
 arr = [];
 
-let parameterString = 'lanid=1&sida=1&antalrader=11';
+let fritextSokning = function ( event ) {
+  event.preventDefault();
 
-fetch(baseURL + matchningURL + parameterString)
-  .then(response => {
-    return response.json();
-  })
-  .then(response => {
-    arr = response.matchningslista.matchningdata;
-  });
+  if ( searchBox.value == "" ) {
+    return console.log( 'No search term entered' );
+  }
+  let parameterString = 'sida=1&antalrader=' + numberOfResults + '&nyckelord=' + searchBox.value;
+
+  fetch( baseURL + matchningURL + parameterString )
+    .then( response => {
+      return response.json();
+    } )
+    .then( response => {
+      return arr = response.matchningslista.matchningdata;
+    } );
+
+}
+
+searchSubmit.addEventListener( 'click', fritextSokning );
