@@ -17,7 +17,7 @@ const insertArticles = arr => {
   }
 };
 const appendArrToStockholm = async () => {
-  let dataObj = await fetchStockholmsLan();
+  let dataObj = await stockholmTen();
   totaltIStockholm = dataObj.antal_platsannonser;
   stockholm10 = await dataObj.matchningdata;
   insertArticles(stockholm10);
