@@ -37,3 +37,4 @@ let fritextSokning = function ( event ) {
 
 searchSubmit.addEventListener( 'click', fritextSokning );
 stockholmTen();
+console.log( searchResultsArr );
