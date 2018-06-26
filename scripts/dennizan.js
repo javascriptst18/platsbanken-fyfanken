@@ -30,6 +30,7 @@ let fritextSokning = function ( event ) {
       return response.json();
     } )
     .then( response => {
+      console.log( response.matchningslista.matchningdata );
       return searchResultsArr = response.matchningslista.matchningdata;
     } );
 
@@ -37,4 +38,3 @@ let fritextSokning = function ( event ) {
 
 searchSubmit.addEventListener( 'click', fritextSokning );
 stockholmTen();
-console.log( searchResultsArr );
