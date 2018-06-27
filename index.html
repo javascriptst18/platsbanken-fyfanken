@@ -6,20 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Roboto:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+    crossorigin="anonymous">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
-  <title>Platsbanken</title>
+  <title>Platsbanken - Fy fanken!</title>
 </head>
 
 <body>
-  <header></header>
+  <header>
+    <div class="header-inner">
+      <h1>Platsbanken
+        <span>
+          <i class="fas fa-user-tie"></i>Fy fanken!</span>
+      </h1>
+      <form id="searchForm" class="search-form">
+        <label for="searchBox">Sök efter jobb:</label>
+        <input id="searchBox" type="text" name="SearchTerm" placeholder="Vad söker du efter?">
+        <button type="submit" id="searchSubmit">Hitta drömjobbet!</button>
+      </form>
+    </div>
+  </header>
+
   <div class="main-wrapper">
     <aside>
-      <form id="searchForm">
-        <input id="searchBox" type="text" placeholder="Enter search text">
-        <input id="numberOfResults" type="text" placeholder="Number of results" value="10">
-        <button type="submit" id="searchSubmit">Search</button>
-      </form>
+      <input id="numberOfResults" type="text" placeholder="Number of results" value="10">
     </aside>
     <main>
 
