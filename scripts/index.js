@@ -3,6 +3,8 @@ const searchForm = document.querySelector('#searchForm');
 const numberOfResults = document.querySelector('#numberOfResults');
 // Pick the main container in the DOM
 const mainContainer = document.querySelector('main');
+const listOfregions = document.querySelector('#listOfRegions');
+const listOfCommunes = document.querySelector('#listOfCommunes');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -141,35 +143,37 @@ mainContainer.addEventListener('click', function(e) {
  *          idHandler.yrkesomradeList - > An array of objects with all yrkesområden and the above values
  * */
 
-let temp;
-
 let idHandler = {
-  lanList: [], // List over available regions
-  yrkesomradeList: [] // List over available job categorys
+  regionList: [], // List over available regions
+  workCategoryList: [] // List over available job categorys
 };
 
 /** idHandler.init runs once when the script loads and
  * fetches the län and yrkesområden lists and stores it
  * to make conversions without repeating API calls.
  */
-idHandler.init = function() {
-  let queryString = 'arbetsformedling/soklista/lan';
+idHandler.appendItemToHtmlId = (listItemArr, whereToAppend) => {
+  whereToAppend.innerHTML = '';
+  for (listItem of listItemArr) {
+    let itemToAppend = `<option value="${listItem}">${listItem}</option>`;
+    whereToAppend.insertAdjacentHTML('beforeend', itemToAppend);
+  }
+};
 
-  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
-    .then(res => res.json())
-    .then(res => {
-      let lanListResult = res;
-      idHandler.lanList = lanListResult.soklista.sokdata;
-    });
+idHandler.init = async () => {
+  let regionQueryString = 'arbetsformedling/soklista/lan';
 
-  queryString = 'platsannonser/soklista/yrkesomraden';
+  let lanListResult = await callFetch(`${apiCall}${regionQueryString}`);
+  idHandler.regionList = await lanListResult.soklista.sokdata;
 
-  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
-    .then(res => res.json())
-    .then(res => {
-      let workCategoryListResult = res;
-      idHandler.yrkesomradeList = workCategoryListResult.soklista.sokdata;
-    });
+  await idHandler.appendItemToHtmlId(idHandler.lanList, listOfregions);
+
+  let workQueryString = 'platsannonser/soklista/yrkesomraden';
+
+  let workCategoryListResult = await callFetch(`${apiCall}${workQueryString}`);
+  idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
+
+  await idHandler.appendItemToHtmlId(idHandler.lanList, listOfRegions);
 };
 
 /** idHandler.getMe is a method that will loop through all län and yrkesområde
@@ -183,7 +187,7 @@ idHandler.init = function() {
  *
  */
 
-idHandler.getMe = function(stringValue) {
+idHandler.getMe = stringValue => {
   for (let category in idHandler) {
     // Loop through idHandler's object properties
     if (idHandler[category].soklista != undefined) {
@@ -199,3 +203,6 @@ idHandler.getMe = function(stringValue) {
 };
 
 idHandler.init();
+
+appendItemToHtmlId(idHandler.lanList, listOfregions);
+appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
