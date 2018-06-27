@@ -71,20 +71,21 @@ const appendInitalDataToHtml = async () => {
 // Call function
 appendInitalDataToHtml();
 
-let fritextSokning = function(event) {
-  event.preventDefault();
-
-  if (searchBox.value == '') {
-    return console.log('Fyll i sökord');
+// append data from fetched array to html dropdown element choosen with id
+appendItemToHtmlId = (listItemArr, whereToAppend) => {
+  whereToAppend.innerHTML = '';
+  for (listItem of listItemArr) {
+    let itemToAppend = `<option id="${listItem.id}" value="${listItem.namn}">${
+      listItem.namn
+    }</option>`;
+    whereToAppend.insertAdjacentHTML('beforeend', itemToAppend);
   }
-  let freeTextSearchString = `platsannonser/matchning?sida=1&antalrader=${
-    numberOfResults.value
-  }&nyckelord=${searchBox.value}`;
-
-  let returnData = callFetch(`${apiCall}${freeTextSearchString}`)
-    .matchningslista.matchningdata;
+  console.log('hej');
 };
 
+// EVENT LISTENERS
+
+// Listen on free text search input
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
 
@@ -130,16 +131,19 @@ mainContainer.addEventListener('click', function(e) {
   }
 });
 
-appendItemToHtmlId = (listItemArr, whereToAppend) => {
-  whereToAppend.innerHTML = '';
-  for (listItem of listItemArr) {
-    let itemToAppend = `<option value="${listItem.namn}">${
-      listItem.namn
-    }</option>`;
-    whereToAppend.insertAdjacentHTML('beforeend', itemToAppend);
-  }
-  console.log('hej');
-};
+// let communeString = `${apiCall}platsannonser/soklista/kommuner`;
+
+//   let communeListResult = await callFetch(communeString);
+//   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
+//   console.log(idHandler.workCategoryList);
+
+//   let workQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
+
+//   let workCategoryListResult = await callFetch(workQueryString);
+//   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
+//   console.log(idHandler.workCategoryList);
+
+//   await appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
 
 /** idHandler is an object that converts string
  *  inputs to unique id values that can be used in API queries.
@@ -166,21 +170,14 @@ let idHandler = {
  */
 
 idHandler.init = async () => {
+  // build query string for region fetch
   let regionQueryString = `${apiCall}arbetsformedling/soklista/lan`;
-
-  let lanListResult = await callFetch(regionQueryString);
-  idHandler.regionList = lanListResult.soklista.sokdata;
+  //  fetch list of regions
+  let regionListResult = await callFetch(regionQueryString);
+  idHandler.regionList = regionListResult.soklista.sokdata;
   console.log(idHandler.regionList);
 
   await appendItemToHtmlId(idHandler.regionList, listOfregions);
-
-  let workQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
-
-  let workCategoryListResult = await callFetch(workQueryString);
-  idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
-  console.log(idHandler.workCategoryList);
-
-  await appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
 };
 
 /** idHandler.getMe is a method that will loop through all län and yrkesområde
