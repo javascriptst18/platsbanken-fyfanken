@@ -151,6 +151,7 @@ let idHandler = {
  * fetches the län and yrkesområden lists and stores it
  * to make conversions without repeating API calls.
  */
+
 idHandler.init = function() {
   let queryString = 'arbetsformedling/soklista/lan';
 
@@ -159,6 +160,7 @@ idHandler.init = function() {
       return response.json();
     })
     .then(response => {
+      console.log(response);
       return (idHandler.lanIds = response);
     });
 
