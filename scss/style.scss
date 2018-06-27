@@ -58,7 +58,7 @@ h1 {
 }
 
 h2 {
-  margin: 6px 0 12px 0;
+  margin: 0 0 20px 0;
 }
 
 header {
@@ -93,6 +93,8 @@ main {
 }
 
 article {
+  display: flex;
+  flex-direction: column;
   background-color: $white;
   padding: 20px;
   width: 100%;
@@ -108,21 +110,35 @@ article {
   }
 }
 
-span.job-title {
-  color: lighten($font-color, 15);
+.ad-details-wrapper {
+  margin-bottom: 30px;
+}
+
+span.work-place,
+span.job-title,
+span.location {
+  display: block;
   font-size: .9rem;
+  margin-bottom: 6px;
   & i {
-    margin-right: 6px;
+    margin-right: 10px;
     color: $link-color;
   }
 }
 
-span.work-place,
-span.location {
-  display: block;
-  font-size: .9rem;
+button.expand-job-ad {
+  margin-top: auto;
+  padding: 12px;
+  background-color: $link-color;
+  color: $white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
   & i {
-    margin-right: 6px;
-    color: $link-color;
+    margin-right: 10px;
+  }
+  &:hover {
+    background-color: lighten($link-color, 10);
+    cursor: pointer;
   }
 }
