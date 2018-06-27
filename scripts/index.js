@@ -46,13 +46,11 @@ const insertArticles = arr => {
   for (article of arr) {
     let articleHtml = `
         <article id=${article.annonsid}>
+          <span class="job-title"><i class="fas fa-tag"></i>${article.yrkesbenamning}</span>
            <h2>${article.annonsrubrik}</h2>
-           <div class="snippets-job-ad">
-            <p>${article.yrkesbenamning}</p>
-            <p>Arbetsgivare: ${article.arbetsplatsnamn}</p>
+            <span class="work-place"><i class="fas fa-building"></i>${article.arbetsplatsnamn}</span>
+            <span class="location"><i class="fas fa-map-marker-alt"></i>${article.kommunnamn}, ${article.lan}</span>
             <p><a href=${article.annonsurl}>Gå till annons</a></p>
-
-           </div>
            <button class="expand-job-ad">Mer info</button>
          </article>`;
     mainContainer.insertAdjacentHTML('beforeend', articleHtml);
