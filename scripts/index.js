@@ -14,15 +14,17 @@ const searchStrings = {
 const fetchData = {
   tenLatestJobsInStockholm: [],
   totaltIStockholm: '',
-  fetchFromTextSearch: []
+  fromTextSearch: []
 };
 
 const callFetch = apiUrl => {
   return fetch(apiUrl).then(res => res.json());
 };
 
-// Insertion of html with initally fetched data
-const insert10FirstArticles = arr => {
+// Injection of html with fetched data
+const insertArticles = arr => {
+  // empty mainContainer before HTML injection
+  mainContainer.innerHTML = '';
   for (article of arr) {
     let articleHtml = `
         <article id=${article.annonsid}>
@@ -58,7 +60,7 @@ const appendInitalDataToHtml = async () => {
 
   fetchData.totaltIStockholm = returnFromFetchData.antal_platsannonser;
 
-  insert10FirstArticles(fetchData.tenLatestJobsInStockholm);
+  insertArticles(fetchData.tenLatestJobsInStockholm);
 };
 
 appendInitalDataToHtml();
@@ -90,11 +92,11 @@ searchForm.addEventListener('submit', async e => {
       numberOfResults.value
     }&nyckelord=${searchBox.value}`;
 
-    console.log(freeTextSearchString);
-
     let returnData = await callFetch(`${apiCall}${freeTextSearchString}`);
 
-    console.log(returnData.matchningslista.matchningdata);
+    fetchData.fromTextSearch = returnData.matchningslista.matchningdata;
+
+    insertArticles(fetchData.fromTextSearch);
   }
 });
 // stockholmTen();
