@@ -129,6 +129,18 @@ mainContainer.addEventListener('click', function(e) {
     e.target.parentElement.scrollIntoView(); // scroll to the opened job ad element
   }
 });
+
+appendItemToHtmlId = (listItemArr, whereToAppend) => {
+  whereToAppend.innerHTML = '';
+  for (listItem of listItemArr) {
+    let itemToAppend = `<option value="${listItem.namn}">${
+      listItem.namn
+    }</option>`;
+    whereToAppend.insertAdjacentHTML('beforeend', itemToAppend);
+  }
+  console.log('hej');
+};
+
 /** idHandler is an object that converts string
  *  inputs to unique id values that can be used in API queries.
  *  It also has two properties that are arrays with all lan and yrkesområden.
@@ -152,28 +164,23 @@ let idHandler = {
  * fetches the län and yrkesområden lists and stores it
  * to make conversions without repeating API calls.
  */
-idHandler.appendItemToHtmlId = (listItemArr, whereToAppend) => {
-  whereToAppend.innerHTML = '';
-  for (listItem of listItemArr) {
-    let itemToAppend = `<option value="${listItem}">${listItem}</option>`;
-    whereToAppend.insertAdjacentHTML('beforeend', itemToAppend);
-  }
-};
 
 idHandler.init = async () => {
-  let regionQueryString = 'arbetsformedling/soklista/lan';
+  let regionQueryString = `${apiCall}arbetsformedling/soklista/lan`;
 
-  let lanListResult = await callFetch(`${apiCall}${regionQueryString}`);
-  idHandler.regionList = await lanListResult.soklista.sokdata;
+  let lanListResult = await callFetch(regionQueryString);
+  idHandler.regionList = lanListResult.soklista.sokdata;
+  console.log(idHandler.regionList);
 
-  await idHandler.appendItemToHtmlId(idHandler.lanList, listOfregions);
+  await appendItemToHtmlId(idHandler.regionList, listOfregions);
 
-  let workQueryString = 'platsannonser/soklista/yrkesomraden';
+  let workQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
 
-  let workCategoryListResult = await callFetch(`${apiCall}${workQueryString}`);
+  let workCategoryListResult = await callFetch(workQueryString);
   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
+  console.log(idHandler.workCategoryList);
 
-  await idHandler.appendItemToHtmlId(idHandler.lanList, listOfRegions);
+  await appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
 };
 
 /** idHandler.getMe is a method that will loop through all län and yrkesområde
@@ -204,5 +211,5 @@ idHandler.getMe = stringValue => {
 
 idHandler.init();
 
-appendItemToHtmlId(idHandler.lanList, listOfregions);
-appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
+// appendItemToHtmlId(idHandler.lanList, listOfregions);
+// appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
