@@ -3,6 +3,9 @@ const searchForm = document.querySelector('#searchForm');
 const numberOfResults = document.querySelector('#numberOfResults');
 // Pick the main container in the DOM
 const mainContainer = document.querySelector('main');
+const mainWrapper = document.querySelector('#mainWrapper');
+const closeButton = document.querySelector('#closeButton');
+const singleAdContainer = document.querySelector('#singleAdContainer');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -69,7 +72,7 @@ const appendInitalDataToHtml = async () => {
 // Call function
 appendInitalDataToHtml();
 
-let fritextSokning = function(event) {
+let fritextSokning = function (event) {
   event.preventDefault();
 
   if (searchBox.value == '') {
@@ -102,29 +105,23 @@ searchForm.addEventListener('submit', async e => {
   }
 });
 
-mainContainer.addEventListener('click', function(e) {
+mainContainer.addEventListener('click', function (e) {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
-    // if expanded job ad...
-    let articleNodes = document.querySelectorAll('article');
-    for (let article of articleNodes) {
-      article.classList.remove('expanded'); // ...remove class expanded on all other jobs
-    }
-    e.target.parentElement.classList.add('expanded'); // add expanded class on the clicked element parent
-    let jobAdTarget = e.target.parentElement;
-    document.addEventListener('click', function(e) {
-      // if click outside expanded element...
-      if (!e.target.closest('.expanded')) {
-        jobAdTarget.classList.remove('expanded'); // ...close the expanded element
-      }
-    });
+    mainWrapper.classList.toggle('fadeout');
+    singleAdContainer.classList.toggle('hidden');
     document.addEventListener('keyup', event => {
       // If Escape button key strokes...
       if (event.key === 'Escape' || event.keyCode === 27) {
-        jobAdTarget.classList.remove('expanded'); // ...close the expanded job ad
+        singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
+        mainWrapper.classList.remove('fadeout');
       }
     });
-    e.target.parentElement.scrollIntoView(); // scroll to the opened job ad element
+    closeButton.addEventListener('click', function (e) {
+      e.preventDefault();
+      singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
+      mainWrapper.classList.remove('fadeout');
+    })
   }
 });
 /** idHandler is an object that converts string 
@@ -155,29 +152,29 @@ idHandler.init = function () {
 
   let queryString = 'arbetsformedling/soklista/lan';
 
-  fetch( 'http://api.arbetsformedlingen.se/af/v0/' + queryString )
-    .then( response => {
+  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
+    .then(response => {
       return response.json();
-    } )
-    .then( response => {
+    })
+    .then(response => {
       return idHandler.lanIds = response;
-    } )
-    .then( response => {
+    })
+    .then(response => {
       return idHandler.lanList = idHandler.lanIds.soklista.sokdata;
-    } )
+    })
 
   queryString = 'platsannonser/soklista/yrkesomraden';
 
-  fetch( 'http://api.arbetsformedlingen.se/af/v0/' + queryString )
-    .then( response => {
+  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
+    .then(response => {
       return response.json();
-    } )
-    .then( response => {
+    })
+    .then(response => {
       return idHandler.yrkesomradenIds = response;
-    } )
-    .then( response => {
+    })
+    .then(response => {
       return idHandler.yrkesomradeList = idHandler.lanIds.soklista.sokdata;
-    } )
+    })
 };
 
 /** idHandler.getMe is a method that will loop through all län and yrkesområde 
@@ -191,11 +188,11 @@ idHandler.init = function () {
  * 
  */
 
-idHandler.getMe = function ( stringValue ) {
-  for ( let category in idHandler ) { // Loop through idHandler's object properties
-    if ( idHandler[ category ].soklista != undefined ) { // Ignore any methods
-      for ( let arrItem of idHandler[ category ].soklista.sokdata ) { // Search until a match is found
-        if ( arrItem.namn.toLowerCase().includes( stringValue.toLowerCase() ) ) {
+idHandler.getMe = function (stringValue) {
+  for (let category in idHandler) { // Loop through idHandler's object properties
+    if (idHandler[category].soklista != undefined) { // Ignore any methods
+      for (let arrItem of idHandler[category].soklista.sokdata) { // Search until a match is found
+        if (arrItem.namn.toLowerCase().includes(stringValue.toLowerCase())) {
           return arrItem;
         }
       }
