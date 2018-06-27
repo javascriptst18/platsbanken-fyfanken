@@ -1,40 +1,40 @@
-const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
-
-const searchStrings = {
-  initalSearchString: 'platsannonser/matchning?lanid=1&sida=1&antalrader=10'
-};
-
-// const returnFromFetchData = {
-//   initalFetchData:
-// }
-
-const initalFetchData = {
-  tenLatestJobsInStockholm: [],
-  totaltIStockholm: ''
-};
-
 const searchBox = document.querySelector('#searchBox');
 const searchForm = document.querySelector('#searchForm');
 const numberOfResults = document.querySelector('#numberOfResults');
 // Pick the main container in the DOM
 const mainContainer = document.querySelector('main');
 
-// Array med sökningsresultat. Innehåller 10 annonser från Stockholms län när sidan laddas första gången. Uppdateras med search box sökningen när man clickar "Search"
-searchResultsArr = [];
+const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
+
+const searchStrings = {
+  initalSearchString: 'platsannonser/matchning?lanid=1&sida=1&antalrader=10'
+};
+
+// store data from fetch calls in variables
+const fetchData = {
+  tenLatestJobsInStockholm: [],
+  totaltIStockholm: ''
+};
 
 const callFetch = apiUrl => {
   return fetch(apiUrl).then(res => res.json());
 };
 
 // Insertion of html with initally fetched data
-const insertArticles = arr => {
+const insert10FirstArticles = arr => {
   for (article of arr) {
     let articleHtml = `
         <article id=${article.annonsid}>
-          <span class="job-title"><i class="fas fa-tag"></i>${article.yrkesbenamning}</span>
+          <span class="job-title"><i class="fas fa-tag"></i>${
+            article.yrkesbenamning
+          }</span>
            <h2>${article.annonsrubrik}</h2>
-            <span class="work-place"><i class="fas fa-building"></i>${article.arbetsplatsnamn}</span>
-            <span class="location"><i class="fas fa-map-marker-alt"></i>${article.kommunnamn}, ${article.lan}</span>
+            <span class="work-place"><i class="fas fa-building"></i>${
+              article.arbetsplatsnamn
+            }</span>
+            <span class="location"><i class="fas fa-map-marker-alt"></i>${
+              article.kommunnamn
+            }, ${article.lan}</span>
             <p><a href=${article.annonsurl}>Gå till annons</a></p>
            <button class="expand-job-ad">Mer info</button>
          </article>`;
@@ -42,18 +42,22 @@ const insertArticles = arr => {
   }
 };
 
-// Append 10 latest jobs to variable and append total jobs in Stockholm to variable. Push 10 latest array to HTML injection function
+/*
+  Append 10 latest jobs to variable and append total jobs in Stockholm to variable. 
+  Push 10 latest array to HTML injection function
+*/
+
 const appendInitalDataToHtml = async () => {
   let returnFromFetchData = await callFetch(
     `${apiCall}${searchStrings.initalSearchString}`
   );
 
-  initalFetchData.tenLatestJobsInStockholm =
+  fetchData.tenLatestJobsInStockholm =
     returnFromFetchData.matchningslista.matchningdata;
 
-  initalFetchData.totaltIStockholm = returnFromFetchData.antal_platsannonser;
+  fetchData.totaltIStockholm = returnFromFetchData.antal_platsannonser;
 
-  insertArticles(initalFetchData.tenLatestJobsInStockholm);
+  insert10FirstArticles(fetchData.tenLatestJobsInStockholm);
 };
 
 appendInitalDataToHtml();
@@ -78,7 +82,8 @@ searchForm.addEventListener('submit', async e => {
   e.preventDefault();
 
   if (searchBox.value == '') {
-    return console.log('Fyll i sökord');
+    // (temporary solution) error message as alert. Change to div insertion with msg
+    alert('Fyll i sökord');
   } else {
     let freeTextSearchString = `platsannonser/matchning?sida=1&antalrader=${
       numberOfResults.value
