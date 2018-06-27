@@ -1,6 +1,6 @@
 const main = document.querySelector('main');
 
-const insertArticles = arr => {
+const insertFetchedArticlesToHtml = arr => {
   for (article of arr) {
     let articleHtml = `
         <article id=${article.annonsid}>
@@ -16,11 +16,12 @@ const insertArticles = arr => {
     main.insertAdjacentHTML('beforeend', articleHtml);
   }
 };
+
 const appendArrToStockholm = async () => {
   let dataObj = await stockholmTen();
   totaltIStockholm = dataObj.antal_platsannonser;
   stockholm10 = await dataObj.matchningdata;
-  insertArticles(stockholm10);
+  insertFetchedArticlesToHtml(stockholm10);
   //   let pushToDoc = await insertArticles(stockholm10);
   console.log(totaltIStockholm);
   return dataObj;
