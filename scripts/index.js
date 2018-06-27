@@ -201,3 +201,19 @@ idHandler.getMe = function (stringValue) {
 };
 
 idHandler.init();
+
+/** Function that returns an object with the details for a given anonsId.
+ * Use "await getJobDetails(jobId)" (Otherwise it'll return an unresolved promise)
+ * */
+
+let getJobDetails = function (jobId) {
+
+  return fetch(`${apiCall}platsannonser/${jobId}`)
+    .then(response => {
+      return response.json();
+    })
+    .then(response => {
+      return response.platsannons;
+    })
+
+}
