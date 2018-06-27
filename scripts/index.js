@@ -121,7 +121,7 @@ mainContainer.addEventListener('click', function (e) {
       e.preventDefault();
       singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
       mainWrapper.classList.remove('fadeout');
-    })
+    });
   }
 });
 /** idHandler is an object that converts string 
