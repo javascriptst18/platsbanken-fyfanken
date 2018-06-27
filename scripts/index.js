@@ -37,7 +37,7 @@ const insert10FirstArticles = arr => {
               article.kommunnamn
             }, ${article.lan}</span>
             </div>
-           <button class="expand-job-ad">Öppna annons</button>
+           <button class="expand-job-ad"><i class="fas fa-plus-circle"></i>Öppna annons</button>
          </article>`;
     mainContainer.insertAdjacentHTML('beforeend', articleHtml);
   }
