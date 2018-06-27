@@ -32,38 +32,23 @@
   <div class="main-wrapper">
     <aside>
 
-      <form>
+      <form id="formOfRegions">
         <select id="listOfRegions">
           <option value="default">...</option>
-          <option value="Blekinge län">Blekinge län</option>
-          <option value="Dalarnas län">Dalarnas län</option>
-          <option value="Gotlands län">Gotlands län</option>
-          <option value="Gävleborgs län">Gävleborgs län</option>
-          <option value="Hallands län">Hallands län</option>
-          <option value="Jämtlands län">Jämtlands län</option>
-          <option value="Jönköpings län">Jönköpings län</option>
-          <option value="Kalmar län">Kalmar län</option>
-          <option value="Kronobergs län">Kronobergs län</option>
-          <option value="Norrbottens län">Norrbottens län</option>
-          <option value="Skåne län">Skåne län</option>
-          <option value="Stockholms län">Stockholms län</option>
-          <option value="Södermanlands län">Södermanlands län</option>
-          <option value="Uppsala län">Uppsala län</option>
-          <option value="Värmlands län">Värmlands län</option>
-          <option value="Västerbottens län">Västerbottens län</option>
-          <option value="Västernorrlands län">Västernorrlands län</option>
-          <option value="Västmanlands län">Västmanlands län</option>
-          <option value="Västra Götalands län">Västra Götalands län</option>
-          <option value="Örebro län">Örebro län</option>
-          <option value="Östergötlands län">Östergötlands län</option>
-          <option value="Ospecificerad arbetsort">Ospecificerad arbetsort</option>
         </select>
+        <input type="submit" value="välj">
+      </form>
 
+      <form id="formOfCommunes">
         <select id="listOfCommunes">
           <option value="default">...</option>
-        </select>
 
+        </select>
+        <input type="submit" value="välj">
       </form>
+
+      <button id="doSearch">Sök</button>
+
       <input id="numberOfResults" type="text" placeholder="Number of results" value="10">
     </aside>
     <main>

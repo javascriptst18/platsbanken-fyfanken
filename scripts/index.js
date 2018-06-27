@@ -3,8 +3,11 @@ const searchForm = document.querySelector('#searchForm');
 const numberOfResults = document.querySelector('#numberOfResults');
 // Pick the main container in the DOM
 const mainContainer = document.querySelector('main');
-const listOfregions = document.querySelector('#listOfRegions');
+const formOfRegions = document.querySelector('#formOfRegions');
+const formOfCommunes = document.querySelector('#formOfCommunes');
+const listOfRegions = document.querySelector('#listOfRegions');
 const listOfCommunes = document.querySelector('#listOfCommunes');
+const doSearch = document.querySelector('#doSearch');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -74,62 +77,16 @@ appendInitalDataToHtml();
 // append data from fetched array to html dropdown element choosen with id
 appendItemToHtmlId = (listItemArr, whereToAppend) => {
   whereToAppend.innerHTML = '';
+
+  // insert default option before genereating list
+  whereToAppend.insertAdjacentHTML('beforeend', `<option>...</option>`);
   for (listItem of listItemArr) {
     let itemToAppend = `<option id="${listItem.id}" value="${listItem.namn}">${
       listItem.namn
     }</option>`;
     whereToAppend.insertAdjacentHTML('beforeend', itemToAppend);
   }
-  console.log('hej');
 };
-
-// EVENT LISTENERS
-
-// Listen on free text search input
-searchForm.addEventListener('submit', async e => {
-  e.preventDefault();
-
-  if (searchBox.value == '') {
-    // (temporary solution) error message as alert. Change to div insertion with msg
-    alert('Fyll i sökord');
-  } else {
-    let freeTextSearchString = `platsannonser/matchning?sida=1&antalrader=${
-      numberOfResults.value
-    }&nyckelord=${searchBox.value}`;
-
-    let returnData = await callFetch(`${apiCall}${freeTextSearchString}`);
-
-    fetchData.fromTextSearch = returnData.matchningslista.matchningdata;
-
-    insertArticles(fetchData.fromTextSearch);
-  }
-});
-
-mainContainer.addEventListener('click', function(e) {
-  // Add Event listener for clicks inside main container
-  if (e.target.classList.contains('expand-job-ad')) {
-    // if expanded job ad...
-    let articleNodes = document.querySelectorAll('article');
-    for (let article of articleNodes) {
-      article.classList.remove('expanded'); // ...remove class expanded on all other jobs
-    }
-    e.target.parentElement.classList.add('expanded'); // add expanded class on the clicked element parent
-    let jobAdTarget = e.target.parentElement;
-    document.addEventListener('click', function(e) {
-      // if click outside expanded element...
-      if (!e.target.closest('.expanded')) {
-        jobAdTarget.classList.remove('expanded'); // ...close the expanded element
-      }
-    });
-    document.addEventListener('keyup', event => {
-      // If Escape button key strokes...
-      if (event.key === 'Escape' || event.keyCode === 27) {
-        jobAdTarget.classList.remove('expanded'); // ...close the expanded job ad
-      }
-    });
-    e.target.parentElement.scrollIntoView(); // scroll to the opened job ad element
-  }
-});
 
 // let communeString = `${apiCall}platsannonser/soklista/kommuner`;
 
@@ -161,7 +118,7 @@ mainContainer.addEventListener('click', function(e) {
 
 let idHandler = {
   regionList: [], // List over available regions
-  workCategoryList: [] // List over available job categorys
+  communeList: [] // List over communes in selected region
 };
 
 /** idHandler.init runs once when the script loads and
@@ -177,7 +134,7 @@ idHandler.init = async () => {
   idHandler.regionList = regionListResult.soklista.sokdata;
   console.log(idHandler.regionList);
 
-  await appendItemToHtmlId(idHandler.regionList, listOfregions);
+  await appendItemToHtmlId(idHandler.regionList, listOfRegions);
 };
 
 /** idHandler.getMe is a method that will loop through all län and yrkesområde
@@ -191,22 +148,92 @@ idHandler.init = async () => {
  *
  */
 
-idHandler.getMe = stringValue => {
-  for (let category in idHandler) {
-    // Loop through idHandler's object properties
-    if (idHandler[category].soklista != undefined) {
-      // Ignore any methods
-      for (let arrItem of idHandler[category].soklista.sokdata) {
-        // Search until a match is found
-        if (arrItem.namn.toLowerCase().includes(stringValue.toLowerCase())) {
-          return arrItem;
-        }
-      }
+idHandler.getRegionId = stringValue => {
+  for (region of idHandler.regionList) {
+    if (region.namn.includes(stringValue)) {
+      return region.id;
     }
   }
 };
 
 idHandler.init();
 
-// appendItemToHtmlId(idHandler.lanList, listOfregions);
-// appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
+// EVENT LISTENERS
+
+// Listen on free text search input
+searchForm.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  if (searchBox.value == '') {
+    // (temporary solution) error message as alert. Change to div insertion with msg
+    alert('Fyll i sökord');
+  } else {
+    let freeTextSearchString = `platsannonser/matchning?sida=1&antalrader=${
+      numberOfResults.value
+    }&nyckelord=${searchBox.value}`;
+
+    let returnData = await callFetch(`${apiCall}${freeTextSearchString}`);
+
+    fetchData.fromTextSearch = returnData.matchningslista.matchningdata;
+
+    insertArticles(fetchData.fromTextSearch);
+  }
+});
+
+formOfRegions.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (listOfRegions.value !== '...') {
+    let regionId = idHandler.getRegionId(listOfRegions.value);
+
+    let communeString = `${apiCall}platsannonser/soklista/kommuner?lanid=${regionId}`;
+
+    let firstResult = await callFetch(communeString);
+    communeListResult = firstResult.soklista.sokdata;
+
+    console.log(communeListResult);
+
+    idHandler.communeList = communeListResult;
+
+    console.log(idHandler.communeList);
+
+    appendItemToHtmlId(idHandler.communeList, listOfCommunes);
+
+    formOfCommunes.style.display = 'block';
+    // idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
+    //   console.log(idHandler.workCategoryList);
+
+    //   let workQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
+
+    //   let workCategoryListResult = await callFetch(workQueryString);
+    //   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
+    //   console.log(idHandler.workCategoryList);
+
+    //   await appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
+  }
+});
+
+mainContainer.addEventListener('click', function(e) {
+  // Add Event listener for clicks inside main container
+  if (e.target.classList.contains('expand-job-ad')) {
+    // if expanded job ad...
+    let articleNodes = document.querySelectorAll('article');
+    for (let article of articleNodes) {
+      article.classList.remove('expanded'); // ...remove class expanded on all other jobs
+    }
+    e.target.parentElement.classList.add('expanded'); // add expanded class on the clicked element parent
+    let jobAdTarget = e.target.parentElement;
+    document.addEventListener('click', function(e) {
+      // if click outside expanded element...
+      if (!e.target.closest('.expanded')) {
+        jobAdTarget.classList.remove('expanded'); // ...close the expanded element
+      }
+    });
+    document.addEventListener('keyup', event => {
+      // If Escape button key strokes...
+      if (event.key === 'Escape' || event.keyCode === 27) {
+        jobAdTarget.classList.remove('expanded'); // ...close the expanded job ad
+      }
+    });
+    e.target.parentElement.scrollIntoView(); // scroll to the opened job ad element
+  }
+});
