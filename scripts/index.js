@@ -3,23 +3,14 @@ const searchForm = document.querySelector('#searchForm');
 const numberOfResults = document.querySelector('#numberOfResults');
 // Pick the main container in the DOM
 const mainContainer = document.querySelector('main');
-<<<<<<< HEAD
-const mainWrapper = document.querySelector('#mainWrapper');
-const closeButton = document.querySelector('#closeButton');
-const singleAdContainer = document.querySelector('#singleAdContainer');
-=======
->>>>>>> prepare-for-pull
 const formOfRegions = document.querySelector('#formOfRegions');
 const formOfCommunes = document.querySelector('#formOfCommunes');
 const listOfRegions = document.querySelector('#listOfRegions');
 const listOfCommunes = document.querySelector('#listOfCommunes');
 const doSearch = document.querySelector('#doSearch');
-<<<<<<< HEAD
-=======
 const mainWrapper = document.querySelector('#mainWrapper');
 const closeButton = document.querySelector('#closeButton');
 const singleAdContainer = document.querySelector('#singleAdContainer');
->>>>>>> prepare-for-pull
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
