@@ -127,74 +127,75 @@ mainContainer.addEventListener('click', function(e) {
     e.target.parentElement.scrollIntoView(); // scroll to the opened job ad element
   }
 });
-
-/** idHandler is an object that converts string
+/** idHandler is an object that converts string 
  *  inputs to unique id values that can be used in API queries.
  *  It also has two properties that are arrays with all lan and yrkesområden.
- *
+ * 
  *  Usage:
  *          idHandler.getMe( 'string with län or yrkesområde name' ).id   -> returns id
  *                                                                  .namn -> returns full name
  *                                                                  .antal_ledigajobb - > returns antal_ledigajobb for the län or yrkesområde
  *                                                                  .antal_platsannonser - > returns platsannonser for the län or yrkesområde
- *
+ * 
  *          idHandler.lanList -> An array of objects with all län and the above values.
  *          idHandler.yrkesomradeList - > An array of objects with all yrkesområden and the above values
  * */
 
 let idHandler = {
   lanIds: {}, // Response object with län data - template "soklista"
-  yrkesomradenIds: {} // Response object with yrkesområden data - template "soklista"
+  yrkesomradenIds: {}, // Response object with yrkesområden data - template "soklista"
 };
 
-/** idHandler.init runs once when the script loads and
- * fetches the län and yrkesområden lists and stores it
+/** idHandler.init runs once when the script loads and 
+ * fetches the län and yrkesområden lists and stores it 
  * to make conversions without repeating API calls.
  */
-idHandler.init = function() {
+
+idHandler.init = function () {
+
   let queryString = 'arbetsformedling/soklista/lan';
 
-  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
-    .then(response => {
+  fetch( 'http://api.arbetsformedlingen.se/af/v0/' + queryString )
+    .then( response => {
       return response.json();
-    })
-    .then(response => {
-      return (idHandler.lanIds = response);
-    });
+    } )
+    .then( response => {
+      return idHandler.lanIds = response;
+    } )
+    .then( response => {
+      return idHandler.lanList = idHandler.lanIds.soklista.sokdata;
+    } )
 
   queryString = 'platsannonser/soklista/yrkesomraden';
 
-  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
-    .then(response => {
+  fetch( 'http://api.arbetsformedlingen.se/af/v0/' + queryString )
+    .then( response => {
       return response.json();
-    })
-    .then(response => {
-      return (idHandler.yrkesomradenIds = response);
-    })
-    .then(response => {
-      return (idHandler.yrkesomradeList = idHandler.lanIds.soklista.sokdata);
-    });
+    } )
+    .then( response => {
+      return idHandler.yrkesomradenIds = response;
+    } )
+    .then( response => {
+      return idHandler.yrkesomradeList = idHandler.lanIds.soklista.sokdata;
+    } )
 };
 
-/** idHandler.getMe is a method that will loop through all län and yrkesområde
+/** idHandler.getMe is a method that will loop through all län and yrkesområde 
  * and return an object with the properties.
- *
+ * 
  * id, namn, antal_platsannonser, antal_ledigajobb
  * for the first match for the given string.
- *
+ * 
  * The string can be partial ie. 'Stockholm' will match 'Stockholms län'
  * but for yrkesområde it will return the object for the first partial match only.
- *
+ * 
  */
 
-idHandler.getMe = function(stringValue) {
-  for (let category in idHandler) {
-    // Loop through idHandler's object properties
-    if (idHandler[category].soklista != undefined) {
-      // Ignore any methods
-      for (let arrItem of idHandler[category].soklista.sokdata) {
-        // Search until a match is found
-        if (arrItem.namn.toLowerCase().includes(stringValue.toLowerCase())) {
+idHandler.getMe = function ( stringValue ) {
+  for ( let category in idHandler ) { // Loop through idHandler's object properties
+    if ( idHandler[ category ].soklista != undefined ) { // Ignore any methods
+      for ( let arrItem of idHandler[ category ].soklista.sokdata ) { // Search until a match is found
+        if ( arrItem.namn.toLowerCase().includes( stringValue.toLowerCase() ) ) {
           return arrItem;
         }
       }
