@@ -13,7 +13,8 @@ const searchStrings = {
 // store data from fetch calls in variables
 const fetchData = {
   tenLatestJobsInStockholm: [],
-  totaltIStockholm: ''
+  totaltIStockholm: '',
+  fetchFromTextSearch: []
 };
 
 const callFetch = apiUrl => {
