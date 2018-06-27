@@ -1,8 +1,8 @@
-const searchBox = document.querySelector( '#searchBox' );
-const searchForm = document.querySelector( '#searchForm' );
-const numberOfResults = document.querySelector( '#numberOfResults' );
+const searchBox = document.querySelector('#searchBox');
+const searchForm = document.querySelector('#searchForm');
+const numberOfResults = document.querySelector('#numberOfResults');
 // Pick the main container in the DOM
-const mainContainer = document.querySelector( 'main' );
+const mainContainer = document.querySelector('main');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -17,28 +17,29 @@ const fetchData = {
 };
 
 const callFetch = apiUrl => {
-  return fetch( apiUrl ).then( res => res.json() );
+  return fetch(apiUrl).then(res => res.json());
 };
 
 // Insertion of html with initally fetched data
 const insert10FirstArticles = arr => {
-  for ( article of arr ) {
+  for (article of arr) {
     let articleHtml = `
         <article id=${article.annonsid}>
-          <span class="job-title"><i class="fas fa-tag"></i>${
+           <h2>${article.annonsrubrik}</h2>
+           <div class="ad-details-wrapper">
+           <span class="job-title"><i class="fas fa-tag"></i>${
             article.yrkesbenamning
           }</span>
-           <h2>${article.annonsrubrik}</h2>
-            <span class="work-place"><i class="fas fa-building"></i>${
+            <span class="work-place"><i class="fas fa-at"></i>${
               article.arbetsplatsnamn
             }</span>
             <span class="location"><i class="fas fa-map-marker-alt"></i>${
               article.kommunnamn
             }, ${article.lan}</span>
-            <p><a href=${article.annonsurl}>Gå till annons</a></p>
-           <button class="expand-job-ad">Mer info</button>
+            </div>
+           <button class="expand-job-ad"><i class="fas fa-plus-circle"></i>Öppna annons</button>
          </article>`;
-    mainContainer.insertAdjacentHTML( 'beforeend', articleHtml );
+    mainContainer.insertAdjacentHTML('beforeend', articleHtml);
   }
 };
 
@@ -57,72 +58,72 @@ const appendInitalDataToHtml = async () => {
 
   fetchData.totaltIStockholm = returnFromFetchData.antal_platsannonser;
 
-  insert10FirstArticles( fetchData.tenLatestJobsInStockholm );
+  insert10FirstArticles(fetchData.tenLatestJobsInStockholm);
 };
 
 appendInitalDataToHtml();
 
-let fritextSokning = function ( event ) {
+let fritextSokning = function (event) {
   event.preventDefault();
 
-  if ( searchBox.value == '' ) {
-    return console.log( 'Fyll i sökord' );
+  if (searchBox.value == '') {
+    return console.log('Fyll i sökord');
   }
   let freeTextSearchString = `platsannonser/matchning?sida=1&antalrader=${
     numberOfResults.value
   }&nyckelord=${searchBox.value}`;
 
-  let returnData = callFetch( `${apiCall}${freeTextSearchString}` )
+  let returnData = callFetch(`${apiCall}${freeTextSearchString}`)
     .matchningslista.matchningdata;
 
-  console.log( returnData );
+  console.log(returnData);
 };
 
-searchForm.addEventListener( 'submit', async e => {
+searchForm.addEventListener('submit', async e => {
   e.preventDefault();
 
-  if ( searchBox.value == '' ) {
+  if (searchBox.value == '') {
     // (temporary solution) error message as alert. Change to div insertion with msg
-    alert( 'Fyll i sökord' );
+    alert('Fyll i sökord');
   } else {
     let freeTextSearchString = `platsannonser/matchning?sida=1&antalrader=${
       numberOfResults.value
     }&nyckelord=${searchBox.value}`;
 
-    console.log( freeTextSearchString );
+    console.log(freeTextSearchString);
 
-    let returnData = await callFetch( `${apiCall}${freeTextSearchString}` );
+    let returnData = await callFetch(`${apiCall}${freeTextSearchString}`);
 
-    console.log( returnData.matchningslista.matchningdata );
+    console.log(returnData.matchningslista.matchningdata);
   }
-} );
+});
 // stockholmTen();
 
-mainContainer.addEventListener( 'click', function ( e ) {
+mainContainer.addEventListener('click', function (e) {
   // Add Event listener for clicks inside main container
-  if ( e.target.classList.contains( 'expand-job-ad' ) ) {
+  if (e.target.classList.contains('expand-job-ad')) {
     // if expanded job ad...
-    let articleNodes = document.querySelectorAll( 'article' );
-    for ( let article of articleNodes ) {
-      article.classList.remove( 'expanded' ); // ...remove class expanded on all other jobs
+    let articleNodes = document.querySelectorAll('article');
+    for (let article of articleNodes) {
+      article.classList.remove('expanded'); // ...remove class expanded on all other jobs
     }
-    e.target.parentElement.classList.add( 'expanded' ); // add expanded class on the clicked element parent
+    e.target.parentElement.classList.add('expanded'); // add expanded class on the clicked element parent
     let jobAdTarget = e.target.parentElement;
-    document.addEventListener( 'click', function ( e ) {
+    document.addEventListener('click', function (e) {
       // if click outside expanded element...
-      if ( !e.target.closest( '.expanded' ) ) {
-        jobAdTarget.classList.remove( 'expanded' ); // ...close the expanded element
+      if (!e.target.closest('.expanded')) {
+        jobAdTarget.classList.remove('expanded'); // ...close the expanded element
       }
-    } );
-    document.addEventListener( 'keyup', event => {
+    });
+    document.addEventListener('keyup', event => {
       // If Escape button key strokes...
-      if ( event.key === 'Escape' || event.keyCode === 27 ) {
-        jobAdTarget.classList.remove( 'expanded' ); // ...close the expanded job ad
+      if (event.key === 'Escape' || event.keyCode === 27) {
+        jobAdTarget.classList.remove('expanded'); // ...close the expanded job ad
       }
-    } );
+    });
     e.target.parentElement.scrollIntoView(); // scroll to the opened job ad element
   }
-} );
+});
 
 /** idHandler is an object that converts string 
  *  inputs to unique id values that can be used in API queries.
@@ -152,29 +153,29 @@ idHandler.init = function () {
 
   let queryString = 'arbetsformedling/soklista/lan';
 
-  fetch( 'http://api.arbetsformedlingen.se/af/v0/' + queryString )
-    .then( response => {
+  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
+    .then(response => {
       return response.json();
-    } )
-    .then( response => {
+    })
+    .then(response => {
       return idHandler.lanIds = response;
-    } )
-    .then( response => {
+    })
+    .then(response => {
       return idHandler.lanList = idHandler.lanIds.soklista.sokdata;
-    } )
+    })
 
   queryString = 'platsannonser/soklista/yrkesomraden';
 
-  fetch( 'http://api.arbetsformedlingen.se/af/v0/' + queryString )
-    .then( response => {
+  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
+    .then(response => {
       return response.json();
-    } )
-    .then( response => {
+    })
+    .then(response => {
       return idHandler.yrkesomradenIds = response;
-    } )
-    .then( response => {
+    })
+    .then(response => {
       return idHandler.yrkesomradeList = idHandler.lanIds.soklista.sokdata;
-    } )
+    })
 };
 
 /** idHandler.getMe is a method that will loop through all län and yrkesområde 
@@ -188,11 +189,11 @@ idHandler.init = function () {
  * 
  */
 
-idHandler.getMe = function ( stringValue ) {
-  for ( let category in idHandler ) { // Loop through idHandler's object properties
-    if ( idHandler[ category ].soklista != undefined ) { // Ignore any methods
-      for ( let arrItem of idHandler[ category ].soklista.sokdata ) { // Search until a match is found
-        if ( arrItem.namn.toLowerCase().includes( stringValue.toLowerCase() ) ) {
+idHandler.getMe = function (stringValue) {
+  for (let category in idHandler) { // Loop through idHandler's object properties
+    if (idHandler[category].soklista != undefined) { // Ignore any methods
+      for (let arrItem of idHandler[category].soklista.sokdata) { // Search until a match is found
+        if (arrItem.namn.toLowerCase().includes(stringValue.toLowerCase())) {
           return arrItem;
         }
       }
