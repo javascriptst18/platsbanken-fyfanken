@@ -26,6 +26,7 @@ const insertArticles = arr => {
   // empty mainContainer before HTML injection
   mainContainer.innerHTML = '';
   for (article of arr) {
+    // html structure with data to inject
     let articleHtml = `
         <article id=${article.annonsid}>
           <span class="job-title"><i class="fas fa-tag"></i>${
@@ -41,6 +42,7 @@ const insertArticles = arr => {
             <p><a href=${article.annonsurl}>Gå till annons</a></p>
            <button class="expand-job-ad">Mer info</button>
          </article>`;
+    //  actual injection
     mainContainer.insertAdjacentHTML('beforeend', articleHtml);
   }
 };
@@ -63,6 +65,7 @@ const appendInitalDataToHtml = async () => {
   insertArticles(fetchData.tenLatestJobsInStockholm);
 };
 
+// Call function
 appendInitalDataToHtml();
 
 let fritextSokning = function(event) {
@@ -77,8 +80,6 @@ let fritextSokning = function(event) {
 
   let returnData = callFetch(`${apiCall}${freeTextSearchString}`)
     .matchningslista.matchningdata;
-
-  console.log(returnData);
 };
 
 searchForm.addEventListener('submit', async e => {
@@ -99,7 +100,6 @@ searchForm.addEventListener('submit', async e => {
     insertArticles(fetchData.fromTextSearch);
   }
 });
-// stockholmTen();
 
 mainContainer.addEventListener('click', function(e) {
   // Add Event listener for clicks inside main container
