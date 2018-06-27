@@ -33,6 +33,7 @@
     <aside>
 
       <form id="formOfRegions">
+        <label for="listOfRegions">Välj län</label>
         <select id="listOfRegions">
           <option value="default">...</option>
         </select>
@@ -40,6 +41,7 @@
       </form>
 
       <form id="formOfCommunes">
+        <label for="listOfCommunes">Välj kommun</label>
         <select id="listOfCommunes">
           <option value="default">...</option>
 
@@ -49,7 +51,12 @@
 
       <button id="doSearch">Sök</button>
 
-      <input id="numberOfResults" type="text" placeholder="Number of results" value="10">
+      <select id="numberOfResults">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
     </aside>
     <main>
 

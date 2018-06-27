@@ -190,6 +190,16 @@ searchForm.addEventListener('submit', async e => {
   }
 });
 
+/*
+
+if select value in region dropdown has a region name the regions id is saved to variable 
+idHandler.regionId and is used to build query string to fetch the communes belonging to 
+the region. After fetch of list of communes the communes are dynamically appended to the 
+communes form below. The commune form and the search button is also set to display block 
+in the end to show on screen.
+
+*/
+
 formOfRegions.addEventListener('submit', async e => {
   e.preventDefault();
   if (listOfRegions.value !== '...') {
@@ -207,11 +217,7 @@ formOfRegions.addEventListener('submit', async e => {
     let firstResult = await callFetch(communeString);
     communeListResult = firstResult.soklista.sokdata;
 
-    console.log(communeListResult);
-
     idHandler.communeList = communeListResult;
-
-    console.log(idHandler.communeList);
 
     appendItemToHtmlId(idHandler.communeList, listOfCommunes);
 
@@ -219,6 +225,14 @@ formOfRegions.addEventListener('submit', async e => {
     doSearch.style.display = 'block';
   }
 });
+
+/*
+
+Listens on commune form and if commune is choosen the id of the specific commune is fetched
+and stored in variable for building search string
+
+
+*/
 
 formOfCommunes.addEventListener('submit', e => {
   e.preventDefault();
@@ -230,9 +244,44 @@ formOfCommunes.addEventListener('submit', e => {
   }
 });
 
-doSearch.addEventListener('click', e => {
-  console.log(idHandler.communeId);
-  console.log(idHandler.regionId);
+/*
+
+Search button that take the stored id of region and commune and makes a query. If commune is left blank
+search query is built only with region id. After query the fetched data is appended inside main. The variables
+is then restored to default value in preparation for new search and search button and commune dropdwn is 
+hidden again with display: none.
+
+*/
+
+doSearch.addEventListener('click', async e => {
+  debugger;
+  let customQueryString = `${apiCall}platsannonser/matchning?lanid=${
+    idHandler.regionId
+  }&sida=1&antalrader=${numberOfResults.value}`;
+
+  let customQueryStringWithCommune = `${apiCall}platsannonser/matchning?lanid=${
+    idHandler.regionId
+  }&kommunid=${idHandler.communeId}&sida=1&antalrader=${numberOfResults.value}`;
+
+  if (idHandler.communeId === '') {
+    let regionCustomSearchResult = await callFetch(customQueryString);
+
+    insertArticles(regionCustomSearchResult.matchningslista.matchningdata);
+  } else {
+    let regionAndCommuneCustomSearchResult = await callFetch(
+      customQueryStringWithCommune
+    );
+
+    insertArticles(
+      regionAndCommuneCustomSearchResult.matchningslista.matchningdata
+    );
+  }
+
+  formOfCommunes.style.display = 'none';
+  doSearch.style.display = 'none';
+
+  idHandler.communeId = '';
+  idHandler.regionId = '';
 });
 
 mainContainer.addEventListener('click', function(e) {
