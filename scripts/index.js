@@ -141,41 +141,34 @@ mainContainer.addEventListener('click', function(e) {
  *          idHandler.yrkesomradeList - > An array of objects with all yrkesområden and the above values
  * */
 
+let temp;
+
 let idHandler = {
-  lanIds: {}, // Response object with län data - template "soklista"
-  yrkesomradenIds: {} // Response object with yrkesområden data - template "soklista"
+  lanList: [], // List over available regions
+  yrkesomradeList: [] // List over available job categorys
 };
 
 /** idHandler.init runs once when the script loads and
  * fetches the län and yrkesområden lists and stores it
  * to make conversions without repeating API calls.
  */
-
 idHandler.init = function() {
   let queryString = 'arbetsformedling/soklista/lan';
 
   fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
-    .then(response => {
-      return response.json();
-    })
-    .then(response => {
-      return (idHandler.lanIds = response);
-    })
-    .then(response => {
-      return (idHandler.lanList = idHandler.lanIds.soklista.sokdata);
+    .then(res => res.json())
+    .then(res => {
+      let lanListResult = res;
+      idHandler.lanList = lanListResult.soklista.sokdata;
     });
 
   queryString = 'platsannonser/soklista/yrkesomraden';
 
   fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
-    .then(response => {
-      return response.json();
-    })
-    .then(response => {
-      return (idHandler.yrkesomradenIds = response);
-    })
-    .then(response => {
-      return (idHandler.yrkesomradeList = idHandler.lanIds.soklista.sokdata);
+    .then(res => res.json())
+    .then(res => {
+      let workCategoryListResult = res;
+      idHandler.yrkesomradeList = workCategoryListResult.soklista.sokdata;
     });
 };
 
