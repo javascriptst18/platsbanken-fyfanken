@@ -8,6 +8,9 @@ const formOfCommunes = document.querySelector('#formOfCommunes');
 const listOfRegions = document.querySelector('#listOfRegions');
 const listOfCommunes = document.querySelector('#listOfCommunes');
 const doSearch = document.querySelector('#doSearch');
+const mainWrapper = document.querySelector('#mainWrapper');
+const closeButton = document.querySelector('#closeButton');
+const singleAdContainer = document.querySelector('#singleAdContainer');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -287,25 +290,19 @@ doSearch.addEventListener('click', async e => {
 mainContainer.addEventListener('click', function(e) {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
-    // if expanded job ad...
-    let articleNodes = document.querySelectorAll('article');
-    for (let article of articleNodes) {
-      article.classList.remove('expanded'); // ...remove class expanded on all other jobs
-    }
-    e.target.parentElement.classList.add('expanded'); // add expanded class on the clicked element parent
-    let jobAdTarget = e.target.parentElement;
-    document.addEventListener('click', function(e) {
-      // if click outside expanded element...
-      if (!e.target.closest('.expanded')) {
-        jobAdTarget.classList.remove('expanded'); // ...close the expanded element
-      }
-    });
+    mainWrapper.classList.toggle('fadeout');
+    singleAdContainer.classList.toggle('hidden');
     document.addEventListener('keyup', event => {
       // If Escape button key strokes...
       if (event.key === 'Escape' || event.keyCode === 27) {
-        jobAdTarget.classList.remove('expanded'); // ...close the expanded job ad
+        singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
+        mainWrapper.classList.remove('fadeout');
       }
     });
-    e.target.parentElement.scrollIntoView(); // scroll to the opened job ad element
+    closeButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
+      mainWrapper.classList.remove('fadeout');
+    });
   }
 });
