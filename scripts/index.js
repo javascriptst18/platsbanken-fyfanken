@@ -127,7 +127,6 @@ mainContainer.addEventListener('click', function(e) {
     e.target.parentElement.scrollIntoView(); // scroll to the opened job ad element
   }
 });
-
 /** idHandler is an object that converts string
  *  inputs to unique id values that can be used in API queries.
  *  It also has two properties that are arrays with all lan and yrkesområden.
@@ -160,8 +159,10 @@ idHandler.init = function() {
       return response.json();
     })
     .then(response => {
-      console.log(response);
       return (idHandler.lanIds = response);
+    })
+    .then(response => {
+      return (idHandler.lanList = idHandler.lanIds.soklista.sokdata);
     });
 
   queryString = 'platsannonser/soklista/yrkesomraden';
