@@ -118,7 +118,9 @@ appendItemToHtmlId = (listItemArr, whereToAppend) => {
 
 let idHandler = {
   regionList: [], // List over available regions
-  communeList: [] // List over communes in selected region
+  communeList: [], // List over communes in selected region
+  regionId: '',
+  communeId: ''
 };
 
 /** idHandler.init runs once when the script loads and
@@ -148,13 +150,21 @@ idHandler.init = async () => {
  *
  */
 
-idHandler.getRegionId = stringValue => {
-  for (region of idHandler.regionList) {
-    if (region.namn.includes(stringValue)) {
-      return region.id;
+idHandler.getListId = (stringValue, list) => {
+  for (item of list) {
+    if (item.namn.includes(stringValue)) {
+      return item.id;
     }
   }
 };
+
+// idHandler.getRegionId = stringValue => {
+//   for (commune of idHandler.communeList) {
+//     if (region.namn.includes(stringValue)) {
+//       return region.id;
+//     }
+//   }
+// };
 
 idHandler.init();
 
@@ -183,9 +193,16 @@ searchForm.addEventListener('submit', async e => {
 formOfRegions.addEventListener('submit', async e => {
   e.preventDefault();
   if (listOfRegions.value !== '...') {
-    let regionId = idHandler.getRegionId(listOfRegions.value);
+    // fetch region id from array of regions
+    idHandler.regionId = idHandler.getListId(
+      listOfRegions.value,
+      idHandler.regionList
+    );
 
-    let communeString = `${apiCall}platsannonser/soklista/kommuner?lanid=${regionId}`;
+    // build commune querystring
+    let communeString = `${apiCall}platsannonser/soklista/kommuner?lanid=${
+      idHandler.regionId
+    }`;
 
     let firstResult = await callFetch(communeString);
     communeListResult = firstResult.soklista.sokdata;
@@ -199,17 +216,23 @@ formOfRegions.addEventListener('submit', async e => {
     appendItemToHtmlId(idHandler.communeList, listOfCommunes);
 
     formOfCommunes.style.display = 'block';
-    // idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
-    //   console.log(idHandler.workCategoryList);
-
-    //   let workQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
-
-    //   let workCategoryListResult = await callFetch(workQueryString);
-    //   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
-    //   console.log(idHandler.workCategoryList);
-
-    //   await appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
+    doSearch.style.display = 'block';
   }
+});
+
+formOfCommunes.addEventListener('submit', e => {
+  e.preventDefault();
+  if (listOfCommunes.value !== '...') {
+    idHandler.communeId = idHandler.getListId(
+      listOfCommunes.value,
+      idHandler.communeList
+    );
+  }
+});
+
+doSearch.addEventListener('click', e => {
+  console.log(idHandler.communeId);
+  console.log(idHandler.regionId);
 });
 
 mainContainer.addEventListener('click', function(e) {
