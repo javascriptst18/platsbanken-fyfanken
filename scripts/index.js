@@ -257,7 +257,6 @@ hidden again with display: none.
 */
 
 doSearch.addEventListener('click', async e => {
-  debugger;
   let customQueryString = `${apiCall}platsannonser/matchning?lanid=${
     idHandler.regionId
   }&sida=1&antalrader=${numberOfResults.value}`;
