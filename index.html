@@ -21,15 +21,17 @@
         <span>
           <i class="fas fa-user-tie"></i>Fy fanken!</span>
       </h1>
+      <form id="searchForm">
+        <label for="searchBox">Sök efter jobb:</label>
+        <input id="searchBox" type="text" name="SearchTerm" placeholder="Vad söker du efter?">
+        <button type="submit" id="searchSubmit">Hitta drömjobbet!</button>
+      </form>
     </div>
   </header>
+
   <div class="main-wrapper">
     <aside>
-      <form id="searchForm">
-        <input id="searchBox" type="text" placeholder="Vad söker du efter?">
-        <input id="numberOfResults" type="text" placeholder="Number of results" value="10">
-        <button type="submit" id="searchSubmit">Search</button>
-      </form>
+      <input id="numberOfResults" type="text" placeholder="Number of results" value="10">
     </aside>
     <main>
 
