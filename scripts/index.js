@@ -3,17 +3,14 @@ const searchForm = document.querySelector('#searchForm');
 const numberOfResults = document.querySelector('#numberOfResults');
 // Pick the main container in the DOM
 const mainContainer = document.querySelector('main');
-<<<<<<< HEAD
 const mainWrapper = document.querySelector('#mainWrapper');
 const closeButton = document.querySelector('#closeButton');
 const singleAdContainer = document.querySelector('#singleAdContainer');
-=======
 const formOfRegions = document.querySelector('#formOfRegions');
 const formOfCommunes = document.querySelector('#formOfCommunes');
 const listOfRegions = document.querySelector('#listOfRegions');
 const listOfCommunes = document.querySelector('#listOfCommunes');
 const doSearch = document.querySelector('#doSearch');
->>>>>>> inject-text-searchHTML
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -80,14 +77,9 @@ const appendInitalDataToHtml = async () => {
 // Call function
 appendInitalDataToHtml();
 
-<<<<<<< HEAD
-let fritextSokning = function (event) {
-  event.preventDefault();
-=======
 // append data from fetched array to html dropdown element choosen with id
 appendItemToHtmlId = (listItemArr, whereToAppend) => {
   whereToAppend.innerHTML = '';
->>>>>>> inject-text-searchHTML
 
   // insert default option before genereating list
   whereToAppend.insertAdjacentHTML('beforeend', `<option>...</option>`);
@@ -201,9 +193,6 @@ searchForm.addEventListener('submit', async e => {
   }
 });
 
-<<<<<<< HEAD
-mainContainer.addEventListener('click', function (e) {
-=======
 /*
 
 if select value in region dropdown has a region name the regions id is saved to variable 
@@ -299,7 +288,6 @@ doSearch.addEventListener('click', async e => {
 });
 
 mainContainer.addEventListener('click', function(e) {
->>>>>>> inject-text-searchHTML
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
     mainWrapper.classList.toggle('fadeout');
@@ -311,106 +299,10 @@ mainContainer.addEventListener('click', function(e) {
         mainWrapper.classList.remove('fadeout');
       }
     });
-    closeButton.addEventListener('click', function (e) {
+    closeButton.addEventListener('click', function(e) {
       e.preventDefault();
       singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
       mainWrapper.classList.remove('fadeout');
-    })
+    });
   }
 });
-<<<<<<< HEAD
-/** idHandler is an object that converts string 
- *  inputs to unique id values that can be used in API queries.
- *  It also has two properties that are arrays with all lan and yrkesområden.
- * 
- *  Usage:
- *          idHandler.getMe( 'string with län or yrkesområde name' ).id   -> returns id
- *                                                                  .namn -> returns full name
- *                                                                  .antal_ledigajobb - > returns antal_ledigajobb for the län or yrkesområde
- *                                                                  .antal_platsannonser - > returns platsannonser for the län or yrkesområde
- * 
- *          idHandler.lanList -> An array of objects with all län and the above values.
- *          idHandler.yrkesomradeList - > An array of objects with all yrkesområden and the above values
- * */
-
-let idHandler = {
-  lanIds: {}, // Response object with län data - template "soklista"
-  yrkesomradenIds: {}, // Response object with yrkesområden data - template "soklista"
-};
-
-/** idHandler.init runs once when the script loads and 
- * fetches the län and yrkesområden lists and stores it 
- * to make conversions without repeating API calls.
- */
-
-idHandler.init = function () {
-
-  let queryString = 'arbetsformedling/soklista/lan';
-
-  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
-    .then(response => {
-      return response.json();
-    })
-    .then(response => {
-      return idHandler.lanIds = response;
-    })
-    .then(response => {
-      return idHandler.lanList = idHandler.lanIds.soklista.sokdata;
-    })
-
-  queryString = 'platsannonser/soklista/yrkesomraden';
-
-  fetch('http://api.arbetsformedlingen.se/af/v0/' + queryString)
-    .then(response => {
-      return response.json();
-    })
-    .then(response => {
-      return idHandler.yrkesomradenIds = response;
-    })
-    .then(response => {
-      return idHandler.yrkesomradeList = idHandler.lanIds.soklista.sokdata;
-    })
-};
-
-/** idHandler.getMe is a method that will loop through all län and yrkesområde 
- * and return an object with the properties.
- * 
- * id, namn, antal_platsannonser, antal_ledigajobb
- * for the first match for the given string.
- * 
- * The string can be partial ie. 'Stockholm' will match 'Stockholms län'
- * but for yrkesområde it will return the object for the first partial match only.
- * 
- */
-
-idHandler.getMe = function (stringValue) {
-  for (let category in idHandler) { // Loop through idHandler's object properties
-    if (idHandler[category].soklista != undefined) { // Ignore any methods
-      for (let arrItem of idHandler[category].soklista.sokdata) { // Search until a match is found
-        if (arrItem.namn.toLowerCase().includes(stringValue.toLowerCase())) {
-          return arrItem;
-        }
-      }
-    }
-  }
-};
-
-idHandler.init();
-
-/** Function that returns an object with the details for a given anonsId.
- * Use "await getJobDetails(jobId)" (Otherwise it'll return an unresolved promise)
- * */
-
-let getJobDetails = function (jobId) {
-
-  return fetch(`${apiCall}platsannonser/${jobId}`)
-    .then(response => {
-      return response.json();
-    })
-    .then(response => {
-      return response.platsannons;
-    })
-
-}
-=======
->>>>>>> inject-text-searchHTML
