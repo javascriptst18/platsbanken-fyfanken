@@ -25,18 +25,19 @@ const insert10FirstArticles = arr => {
   for (article of arr) {
     let articleHtml = `
         <article id=${article.annonsid}>
-          <span class="job-title"><i class="fas fa-tag"></i>${
+           <h2>${article.annonsrubrik}</h2>
+           <div class="ad-details-wrapper">
+           <span class="job-title"><i class="fas fa-tag"></i>${
             article.yrkesbenamning
           }</span>
-           <h2>${article.annonsrubrik}</h2>
-            <span class="work-place"><i class="fas fa-building"></i>${
+            <span class="work-place"><i class="fas fa-at"></i>${
               article.arbetsplatsnamn
             }</span>
             <span class="location"><i class="fas fa-map-marker-alt"></i>${
               article.kommunnamn
             }, ${article.lan}</span>
-            <p><a href=${article.annonsurl}>Gå till annons</a></p>
-           <button class="expand-job-ad">Mer info</button>
+            </div>
+           <button class="expand-job-ad">Öppna annons</button>
          </article>`;
     mainContainer.insertAdjacentHTML('beforeend', articleHtml);
   }
@@ -62,7 +63,7 @@ const appendInitalDataToHtml = async () => {
 
 appendInitalDataToHtml();
 
-let fritextSokning = function(event) {
+let fritextSokning = function (event) {
   event.preventDefault();
 
   if (searchBox.value == '') {
@@ -98,7 +99,7 @@ searchForm.addEventListener('submit', async e => {
 });
 // stockholmTen();
 
-mainContainer.addEventListener('click', function(e) {
+mainContainer.addEventListener('click', function (e) {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
     // if expanded job ad...
@@ -108,7 +109,7 @@ mainContainer.addEventListener('click', function(e) {
     }
     e.target.parentElement.classList.add('expanded'); // add expanded class on the clicked element parent
     let jobAdTarget = e.target.parentElement;
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       // if click outside expanded element...
       if (!e.target.closest('.expanded')) {
         jobAdTarget.classList.remove('expanded'); // ...close the expanded element
