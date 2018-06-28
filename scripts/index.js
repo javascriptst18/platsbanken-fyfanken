@@ -203,7 +203,7 @@ in the end to show on screen.
 
 */
 
-formOfRegions.addEventListener('submit', async e => {
+formOfRegions.addEventListener('change', async e => {
   e.preventDefault();
   if (listOfRegions.value !== '...') {
     // fetch region id from array of regions
@@ -237,7 +237,7 @@ and stored in variable for building search string
 
 */
 
-formOfCommunes.addEventListener('submit', e => {
+formOfCommunes.addEventListener('change', e => {
   e.preventDefault();
   if (listOfCommunes.value !== '...') {
     idHandler.communeId = idHandler.getListId(
