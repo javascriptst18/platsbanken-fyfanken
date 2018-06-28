@@ -26,6 +26,15 @@
         <input id="searchBox" type="text" name="SearchTerm" placeholder="Vad söker du efter?">
         <button type="submit" id="searchSubmit">Hitta drömjobbet!</button>
       </form>
+      <div class="amount-picker">
+        <label for="numberOfResults" class="amount-label">Antal annonser per sida:</label>
+        <select id="numberOfResults">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+        </select>
+      </div>
     </div>
   </header>
   <div class="page-wrapper">
@@ -42,32 +51,28 @@
     </div>
 
     <div class="main-wrapper" id="mainWrapper">
+
       <aside>
+        <div class="aside-inner">
+          <h3>Filtrera din sökning:</h3>
+          <form id="formOfRegions">
+            <label for="listOfRegions">Välj län:</label>
+            <select id="listOfRegions">
+            </select>
+          </form>
+          <form id="formOfCommunes">
+            <label for="listOfCommunes">Välj kommun:</label>
+            <select id="listOfCommunes">
+            </select>
+          </form>
+          <form id="formOfWorkCategory">
+            <label for="listOfWorkCategory">Välj yrkesområde:</label>
+            <select id="listOfWorkCategory"></select>
+          </form>
 
-        <form id="formOfRegions">
-          <label for="listOfRegions">Välj län</label>
-          <select id="listOfRegions">
-          </select>
-        </form>
-        <form id="formOfCommunes">
-          <label for="listOfCommunes">Välj kommun</label>
-          <select id="listOfCommunes">
-          </select>
-        </form>
-        <form id="formOfWorkCategory">
-          <label for="listOfWorkCategory">Välj yrkesområde</label>
-          <select id="listOfWorkCategory"></select>
-          <input type="submit" value="välj">
-        </form>
+          <button id="doSearch">Filtrera</button>
+        </div>
 
-        <button id="doSearch">Sök</button>
-
-        <select id="numberOfResults">
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="40">40</option>
-        </select>
       </aside>
       <main>
 
