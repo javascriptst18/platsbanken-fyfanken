@@ -431,3 +431,108 @@ mainContainer.addEventListener('click', async e => {
     });
   }
 });
+
+//
+
+let PlatsbankenApp = {
+
+  userSettings: {
+    searchBoxInput: '',
+    resultsPerPage: '',
+    filterOptions: {
+      lan: 'Hallands län',
+      get lanid() {
+        return `lanid=${PlatsbankenApp.convertId(this.lan) || ''}&`;
+      },
+      kommun: '',
+      get kommunid() {
+        return `kommunid=${PlatsbankenApp.convertId(this.kommun) || ''}&`;
+      },
+      yrkesomrade: '',
+      get yrkesomradeid() {
+        return `yrkesomradeid=${PlatsbankenApp.convertId(this.yrkesomrade) || ''}&`;
+      },
+      yrkesgrupp: '',
+      get yrkesgruppid() {
+        return `yrkesgruppid=${PlatsbankenApp.convertId(this.yrkesgrupp) || ''}&`;
+      }
+    }
+  },
+
+  filterLists: {
+    lanList: [],
+    kommunList: [],
+    yrkesomradeList: [],
+    yrkesgruppList: [],
+  },
+
+  staticQueryStrings: {
+    lan: 'arbetsformedling/soklista/lan',
+    yrkesomraden: 'platsannonser/soklista/yrkesomraden',
+    kommuner: 'platsannonser/soklista/kommuner?lanid=',
+    yrkesgrupper: 'platsannonser/soklista/yrkesgrupper?yrkesomradeid=',
+    baseURL: 'http://api.arbetsformedlingen.se/af/v0/',
+    matchning: 'platsannonser/matchning?',
+  }
+}
+
+PlatsbankenApp.generateQueryString = function (typeOfQuery) {
+  let qString = '';
+  let opts = PlatsbankenApp.userSettings.filterOptions;
+  qString = PlatsbankenApp.staticQueryStrings[typeOfQuery] +
+    opts.lanid +
+    opts.kommunid +
+    opts.yrkesomradeid +
+    opts.yrkesgruppid +
+    'antalrader=' + this.userSettings.resultsPerPage +
+    'sida=1';
+  return qString
+}
+
+PlatsbankenApp.convertId = function (inputName) {
+
+  for (let list in PlatsbankenApp.filterLists) {
+    for (let listItem of PlatsbankenApp.filterLists[list]) {
+      if (listItem.namn == inputName) {
+        return listItem.id;
+      }
+    }
+  }
+}
+
+PlatsbankenApp.loadLists = function (requestGroup) {
+
+  fetch(PlatsbankenApp.staticQueryStrings.baseURL + PlatsbankenApp.staticQueryStrings.lan)
+    .then(response => {
+      return response.json();
+    })
+    .then(response => {
+      this.filterLists.lanList = response.soklista.sokdata;
+      return
+    })
+    .then(res => {
+      fetch(PlatsbankenApp.staticQueryStrings.baseURL + PlatsbankenApp.staticQueryStrings.yrkesomraden)
+        .then(response => {
+          return response.json();
+        })
+        .then(response => {
+          this.filterLists.yrkesomradeList = response.soklista.sokdata;
+          return
+        })
+    })
+    .then(res => {
+      let requestTarget = '';
+      let qString = PlatsbankenApp.staticQueryStrings[requestGroup];
+      requestGroup == 'kommuner' ? requestTarget = 'lanList' : requestTarget = 'yrkesomradenList';
+      for (let item of PlatsbankenApp.filterLists[requestTarget]) {
+        fetch(PlatsbankenApp.staticQueryStrings.baseURL + qString + item.id)
+          .then(response => {
+            return response.json()
+          })
+          .then(response => {
+            item[response.soklista.listnamn + 'List'] = response.soklista.sokdata;
+            return
+          })
+      }
+    })
+}
