@@ -12,6 +12,7 @@ const mainWrapper = document.querySelector('#mainWrapper');
 const closeButton = document.querySelector('#closeButton');
 const singleAdContainer = document.querySelector('#singleAdContainer');
 const singleAdContainerInner = document.querySelector('#singleAdContainerInner');
+const singleAdContainerInnerContent = document.querySelector('#singleAdContainerInnerContent');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -59,7 +60,7 @@ const insertArticles = arr => {
             <span class="location"><i class="fas fa-map-marker-alt"></i>${
               article.kommunnamn
             }, ${article.lan}</span>
-            <span class="latest-application-date"><i class="far fa-clock"></i>Ansök senast ${lastDayApply}
+            <span class="latest-application-date"><i class="far fa-clock"></i>Ansök senast ${lastDayApply}</span>
             </div>
            <button class="expand-job-ad"><i class="fas fa-plus-circle"></i>Öppna annons</button>
          </article>`;
@@ -313,12 +314,38 @@ mainContainer.addEventListener('click', async (e) => {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
     const annonsID = e.target.parentElement.id;
-    let annonsContent = await getJobDetails(annonsID);
-    console.log(annonsContent.platsannons);
-    let annonsObject = `
-    <h2>${annonsContent.platsannons.annons.annonsrubrik}</h2>
+    if (singleAdContainerInner.dataset.annonsid !== annonsID) {
+      let annonsContent = await getJobDetails(annonsID);
+      console.log(annonsContent);
+      let annonsText = annonsContent.platsannons.annons.annonstext;
+      annonsText = '<p>' + annonsText.replace(/\n([ \t]*\n)+/g, '</p><p>')
+        .replace(/\n/g, '<br />') + '</p>';
+      let lastDayApply = formatDate(annonsContent.platsannons.ansokan.sista_ansokningsdag);
+      let annonsObject = `
+      <h2 class="single-rubrik">${annonsContent.platsannons.annons.annonsrubrik}</h2>
+      <div class="single-ad-left">
+    <p>${annonsText}</p>
+    </div>
+    <div class="single-ad-right">
+    ${annonsContent.platsannons.arbetsplats.logotypurl === undefined ? '' : '<img src="' + annonsContent.platsannons.arbetsplats.logotypurl + '">'}
+    <span class="job-title"><i class="fas fa-tag"></i>${
+      annonsContent.platsannons.annons.yrkesbenamning
+    }</span>
+     <span class="work-place"><i class="fas fa-at"></i>${
+      annonsContent.platsannons.arbetsplats.arbetsplatsnamn
+     }</span>
+     <span class="location"><i class="fas fa-map-marker-alt"></i>${
+      annonsContent.platsannons.annons.kommunnamn
+     }</span>
+     <span class="latest-application-date"><i class="far fa-clock"></i>Ansök senast ${lastDayApply}</span>
+  
+     </div>
+    </div>
     `;
-    singleAdContainerInner.insertAdjacentHTML('beforeend', annonsObject);
+      singleAdContainerInner.dataset.annonsid = annonsID;
+      singleAdContainerInnerContent.innerHTML = '';
+      singleAdContainerInnerContent.insertAdjacentHTML('beforeend', annonsObject);
+    }
     mainWrapper.classList.toggle('fadeout');
     singleAdContainer.classList.toggle('hidden');
     document.addEventListener('keyup', event => {
