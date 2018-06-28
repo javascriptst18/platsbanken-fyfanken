@@ -110,10 +110,6 @@ appendItemToHtmlId = (listItemArr, whereToAppend) => {
   }
 };
 
-//
-
-//   await appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
-
 /** idHandler is an object that converts string
  *  inputs to unique id values that can be used in API queries.
  *  It also has two properties that are arrays with all lan and yrkesområden.
@@ -171,14 +167,6 @@ idHandler.getListId = (stringValue, list) => {
     }
   }
 };
-
-// idHandler.getRegionId = stringValue => {
-//   for (commune of idHandler.communeList) {
-//     if (region.namn.includes(stringValue)) {
-//       return region.id;
-//     }
-//   }
-// };
 
 idHandler.init();
 
@@ -267,6 +255,12 @@ formOfCommunes.addEventListener('change', async e => {
   }
 });
 
+/*
+
+On choice listener fetches workcategories and append searchresult to DOM
+
+*/
+
 formOfWorkCategory.addEventListener('change', async e => {
   e.preventDefault();
   console.log(listOfWorkCategory.value);
@@ -294,6 +288,8 @@ hidden again with display: none.
 */
 
 doSearch.addEventListener('click', async e => {
+  // Diffrent search queries based on selected chioce
+
   let amountOfResult = `&sida=1&antalrader=${numberOfResults.value}`;
   let customQueryString = `${apiCall}platsannonser/matchning?lanid=${
     idHandler.regionId
@@ -310,6 +306,8 @@ doSearch.addEventListener('click', async e => {
   let customQueryStringWithoutCommuneButWorkcategory = (customQueryString += `&yrkesomradeid=${
     idHandler.workCategoryId
   }${amountOfResult}`);
+
+  // Scenario building on selected choices
 
   if (idHandler.communeId === '') {
     let regionCustomSearchResult = await callFetch(customQueryString);
@@ -339,8 +337,10 @@ doSearch.addEventListener('click', async e => {
     );
   }
 
+  // reset fetched ids
   idHandler.communeId = '';
   idHandler.regionId = '';
+  idHandler.workCategoryId = '';
 });
 
 /** Function that returns an object with the details for a given anonsId.
@@ -359,14 +359,22 @@ mainContainer.addEventListener('click', async e => {
     let annonsContent = await getJobDetails(annonsID);
     console.log(annonsContent);
     let annonsText = annonsContent.platsannons.annons.annonstext;
-    annonsText = '<p>' + annonsText.replace(/\n([ \t]*\n)+/g, '</p><p>')
-      .replace(/\n/g, '<br />') + '</p>';
-    let lastDayApply = formatDate(annonsContent.platsannons.ansokan.sista_ansokningsdag);
+    annonsText =
+      '<p>' +
+      annonsText.replace(/\n([ \t]*\n)+/g, '</p><p>').replace(/\n/g, '<br />') +
+      '</p>';
+    let lastDayApply = formatDate(
+      annonsContent.platsannons.ansokan.sista_ansokningsdag
+    );
     let annonsObject = `
-      <h2 class="single-rubrik">${annonsContent.platsannons.annons.annonsrubrik}</h2>
+      <h2 class="single-rubrik">${
+        annonsContent.platsannons.annons.annonsrubrik
+      }</h2>
       <div class="single-ad-left">
     <p>${annonsText}</p>
-    <a class="apply-link" href="${annonsContent.platsannons.ansokan.webbplats}" target="_blank">Ansök nu</a>
+    <a class="apply-link" href="${
+      annonsContent.platsannons.ansokan.webbplats
+    }" target="_blank">Ansök nu</a>
     </div>
     <div class="single-ad-right">
     ${
@@ -384,7 +392,9 @@ mainContainer.addEventListener('click', async e => {
        annonsContent.platsannons.annons.kommunnamn
      }</span>
      <span class="latest-application-date"><i class="far fa-clock"></i>Ansök senast ${lastDayApply}</span>
-  <a class="apply-link" href="${annonsContent.platsannons.ansokan.webbplats}" target="_blank">Ansök nu</a>
+  <a class="apply-link" href="${
+    annonsContent.platsannons.ansokan.webbplats
+  }" target="_blank">Ansök nu</a>
      </div>
     </div>
     `;
@@ -401,26 +411,26 @@ mainContainer.addEventListener('click', async e => {
         singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
         mainWrapper.classList.remove('fadeout');
         singleAdContainerInnerContent.innerHTML = '';
-        setTimeout(function () {
+        setTimeout(function() {
           singleAdContainerInnerContent.innerHTML = '';
           window.scrollTo({
             top: scrollPosition,
-            behavior: "smooth"
+            behavior: 'smooth'
           });
         }, 200);
       }
     });
-    closeButton.addEventListener('click', function (e) {
+    closeButton.addEventListener('click', function(e) {
       e.preventDefault();
       singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
       mainWrapper.classList.remove('fadeout');
-      setTimeout(function () {
+      setTimeout(function() {
         singleAdContainerInnerContent.innerHTML = '';
         window.scrollTo({
           top: scrollPosition,
-          behavior: "smooth"
+          behavior: 'smooth'
         });
       }, 200);
-    })
+    });
   }
 });
