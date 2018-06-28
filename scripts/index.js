@@ -157,10 +157,9 @@ idHandler.init = function () {
       return response.json();
     })
     .then(response => {
-      return idHandler.lanIds = response;
-    })
-    .then(response => {
-      return idHandler.lanList = idHandler.lanIds.soklista.sokdata;
+      idHandler.lanIds = response;
+      idHandler.lanList = idHandler.lanIds.soklista.sokdata;
+      return
     })
 
   queryString = 'platsannonser/soklista/yrkesomraden';
@@ -170,10 +169,9 @@ idHandler.init = function () {
       return response.json();
     })
     .then(response => {
-      return idHandler.yrkesomradenIds = response;
-    })
-    .then(response => {
-      return idHandler.yrkesomradeList = idHandler.lanIds.soklista.sokdata;
+      idHandler.yrkesomradenIds = response;
+      idHandler.yrkesomradeList = idHandler.yrkesomradenIds.soklista.sokdata;
+      return
     })
 };
 
