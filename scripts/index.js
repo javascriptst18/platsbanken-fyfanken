@@ -6,6 +6,7 @@ const mainContainer = document.querySelector('main');
 const mainWrapper = document.querySelector('#mainWrapper');
 const closeButton = document.querySelector('#closeButton');
 const singleAdContainer = document.querySelector('#singleAdContainer');
+const singleAdContainerInner = document.querySelector('#singleAdContainerInner');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -24,11 +25,21 @@ const callFetch = apiUrl => {
   return fetch(apiUrl).then(res => res.json());
 };
 
+// Format the date
+
+function formatDate(input) {
+  //Converts input from string to Date and then formats date as 'en-gb' (dd/mm/yyyy)
+  let formattedDate = new Date(input).toLocaleDateString('sv-se');
+  //Return the formatted date
+  return formattedDate;
+}
+
 // Injection of html with fetched data
 const insertArticles = arr => {
   // empty mainContainer before HTML injection
   mainContainer.innerHTML = '';
   for (article of arr) {
+    let lastDayApply = formatDate(article.sista_ansokningsdag);
     // html structure with data to inject
     let articleHtml = `
         <article id=${article.annonsid}>
@@ -43,6 +54,7 @@ const insertArticles = arr => {
             <span class="location"><i class="fas fa-map-marker-alt"></i>${
               article.kommunnamn
             }, ${article.lan}</span>
+            <span class="latest-application-date"><i class="far fa-clock"></i>Ansök senast ${lastDayApply}
             </div>
            <button class="expand-job-ad"><i class="fas fa-plus-circle"></i>Öppna annons</button>
          </article>`;
@@ -105,9 +117,22 @@ searchForm.addEventListener('submit', async e => {
   }
 });
 
+async function getSingleAdContent(annonsID) {
+  const annonsContent = await getJobDetails(annonsID);
+  return annonsContent;
+}
+
 mainContainer.addEventListener('click', function (e) {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
+    e.target.innerHTML = "Laddar..."
+    const annonsID = e.target.parentElement.id;
+    let annonsContent = getSingleAdContent(annonsID);
+    console.log(annonsContent);
+    let annonsObject = `
+    <h2>${annonsContent.annons.annonsrubrik}</h2>
+    `;
+    singleAdContainerInner.insertAdjacentHTML('beforeend', annonsObject);
     mainWrapper.classList.toggle('fadeout');
     singleAdContainer.classList.toggle('hidden');
     document.addEventListener('keyup', event => {
@@ -215,5 +240,4 @@ let getJobDetails = function (jobId) {
     .then(response => {
       return response.platsannons;
     })
-
 }
