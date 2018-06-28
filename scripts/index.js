@@ -432,7 +432,7 @@ mainContainer.addEventListener('click', async e => {
   }
 });
 
-//
+// PlatsbankenApp
 
 let PlatsbankenApp = {
 
