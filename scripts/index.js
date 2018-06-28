@@ -339,9 +339,6 @@ doSearch.addEventListener('click', async e => {
     );
   }
 
-  formOfCommunes.style.display = 'none';
-  doSearch.style.display = 'none';
-
   idHandler.communeId = '';
   idHandler.regionId = '';
 });
