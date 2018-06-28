@@ -26,6 +26,8 @@ const searchStrings = {
   initalSearchString: 'platsannonser/matchning?lanid=1&sida=1&antalrader=10'
 };
 
+let scrollPosition = "";
+
 // store data from fetch calls in variables
 const fetchData = {
   tenLatestJobsInStockholm: [],
@@ -352,20 +354,16 @@ const getJobDetails = async jobId => {
   return await callFetch(queryString);
 };
 
+// Add Event listener for clicks inside main container
 mainContainer.addEventListener('click', async e => {
-  // Add Event listener for clicks inside main container
-  if (e.target.classList.contains('expand-job-ad')) {
-    const annonsID = e.target.parentElement.id;
-    let annonsContent = await getJobDetails(annonsID);
-    console.log(annonsContent);
-    let annonsText = annonsContent.platsannons.annons.annonstext;
-    annonsText =
-      '<p>' +
-      annonsText.replace(/\n([ \t]*\n)+/g, '</p><p>').replace(/\n/g, '<br />') +
-      '</p>';
-    let lastDayApply = formatDate(
-      annonsContent.platsannons.ansokan.sista_ansokningsdag
-    );
+  if (e.target.classList.contains('expand-job-ad')) { // if open ad button
+    const annonsID = e.target.parentElement.id; // get current ad id
+    let annonsContent = await getJobDetails(annonsID); // fetch the full ad
+    let annonsText = annonsContent.platsannons.annons.annonstext; // get the text for the ad
+    annonsText = '<p>' + annonsText.replace(/\n([ \t]*\n)+/g, '</p><p>') // make the text nice
+      .replace(/\n/g, '<br />') + '</p>';
+    let lastDayApply = formatDate(annonsContent.platsannons.ansokan.sista_ansokningsdag); // format the date for last application date
+    // create the full ad object
     let annonsObject = `
       <h2 class="single-rubrik">${
         annonsContent.platsannons.annons.annonsrubrik
@@ -398,35 +396,34 @@ mainContainer.addEventListener('click', async e => {
      </div>
     </div>
     `;
-    singleAdContainerInner.dataset.annonsid = annonsID;
-    singleAdContainerInnerContent.innerHTML = '';
-    singleAdContainerInnerContent.insertAdjacentHTML('beforeend', annonsObject);
-    let scrollPosition = window.pageYOffset;
-    window.scrollTo(0, 0);
-    mainWrapper.classList.toggle('fadeout');
-    singleAdContainer.classList.toggle('hidden');
-    document.addEventListener('keyup', event => {
+    singleAdContainerInner.dataset.annonsid = annonsID; // set the data id of the ad
+    singleAdContainerInnerContent.innerHTML = ''; // make sure the full ad container is empty
+    scrollPosition = window.pageYOffset; // store the scroll position for when we close the full ad (to be able to get back to same location)
+    singleAdContainerInnerContent.insertAdjacentHTML('beforeend', annonsObject); // insert the full ad
+    window.scrollTo(0, 0); // scroll to top
+    mainWrapper.classList.toggle('fadeout'); // fade out the main content with css animation
+    singleAdContainer.classList.toggle('hidden'); // show and slide the main ad container with css animation
+    document.addEventListener('keyup', event => { // add event listner for escape clicks for closing the ad
       // If Escape button key strokes...
       if (event.key === 'Escape' || event.keyCode === 27) {
         singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
-        mainWrapper.classList.remove('fadeout');
-        singleAdContainerInnerContent.innerHTML = '';
-        setTimeout(function() {
-          singleAdContainerInnerContent.innerHTML = '';
-          window.scrollTo({
+        mainWrapper.classList.remove('fadeout'); // fade in the content again
+        setTimeout(function () { // delay the execution of the following events
+          singleAdContainerInnerContent.innerHTML = ''; // remove the ad content to restore the original scroll length
+          window.scrollTo({ // Scroll back
             top: scrollPosition,
             behavior: 'smooth'
           });
         }, 200);
       }
     });
-    closeButton.addEventListener('click', function(e) {
+    closeButton.addEventListener('click', function (e) { // add listener for clicks on the close button 
       e.preventDefault();
-      singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
-      mainWrapper.classList.remove('fadeout');
-      setTimeout(function() {
-        singleAdContainerInnerContent.innerHTML = '';
-        window.scrollTo({
+      singleAdContainer.classList.add('hidden'); // Hide the expanded job ad
+      mainWrapper.classList.remove('fadeout'); // Fade in the main content
+      setTimeout(function () {
+        singleAdContainerInnerContent.innerHTML = ''; // Empty the ad content
+        window.scrollTo({ // Scroll back
           top: scrollPosition,
           behavior: 'smooth'
         });
