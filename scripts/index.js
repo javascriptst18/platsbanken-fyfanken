@@ -11,6 +11,7 @@ const doSearch = document.querySelector('#doSearch');
 const mainWrapper = document.querySelector('#mainWrapper');
 const closeButton = document.querySelector('#closeButton');
 const singleAdContainer = document.querySelector('#singleAdContainer');
+const singleAdContainerInner = document.querySelector('#singleAdContainerInner');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -29,11 +30,21 @@ const callFetch = apiUrl => {
   return fetch(apiUrl).then(res => res.json());
 };
 
+// Format the date
+
+function formatDate(input) {
+  //Converts input from string to Date and then formats date as 'en-gb' (dd/mm/yyyy)
+  let formattedDate = new Date(input).toLocaleDateString('sv-se');
+  //Return the formatted date
+  return formattedDate;
+}
+
 // Injection of html with fetched data
 const insertArticles = arr => {
   // empty mainContainer before HTML injection
   mainContainer.innerHTML = '';
   for (article of arr) {
+    let lastDayApply = formatDate(article.sista_ansokningsdag);
     // html structure with data to inject
     let articleHtml = `
         <article id=${article.annonsid}>
@@ -48,6 +59,7 @@ const insertArticles = arr => {
             <span class="location"><i class="fas fa-map-marker-alt"></i>${
               article.kommunnamn
             }, ${article.lan}</span>
+            <span class="latest-application-date"><i class="far fa-clock"></i>Ansök senast ${lastDayApply}
             </div>
            <button class="expand-job-ad"><i class="fas fa-plus-circle"></i>Öppna annons</button>
          </article>`;
@@ -286,9 +298,27 @@ doSearch.addEventListener('click', async e => {
   idHandler.regionId = '';
 });
 
-mainContainer.addEventListener('click', function(e) {
+/** Function that returns an object with the details for a given anonsId.
+ * Use "await getJobDetails(jobId)" (Otherwise it'll return an unresolved promise)
+ * */
+
+const getJobDetails = async (jobId) => {
+  let queryString = `${apiCall}platsannonser/${jobId}`;
+  return await callFetch(queryString);
+
+
+}
+
+mainContainer.addEventListener('click', async (e) => {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
+    const annonsID = e.target.parentElement.id;
+    let annonsContent = await getJobDetails(annonsID);
+    console.log(annonsContent.platsannons);
+    let annonsObject = `
+    <h2>${annonsContent.platsannons.annons.annonsrubrik}</h2>
+    `;
+    singleAdContainerInner.insertAdjacentHTML('beforeend', annonsObject);
     mainWrapper.classList.toggle('fadeout');
     singleAdContainer.classList.toggle('hidden');
     document.addEventListener('keyup', event => {
@@ -298,10 +328,10 @@ mainContainer.addEventListener('click', function(e) {
         mainWrapper.classList.remove('fadeout');
       }
     });
-    closeButton.addEventListener('click', function(e) {
+    closeButton.addEventListener('click', function (e) {
       e.preventDefault();
       singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
       mainWrapper.classList.remove('fadeout');
-    });
+    })
   }
 });
