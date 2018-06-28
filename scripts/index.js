@@ -436,11 +436,13 @@ mainContainer.addEventListener('click', async e => {
 
 let PlatsbankenApp = {
 
-  userSettings: {
+  userOptions: {
+
     searchBoxInput: '',
     resultsPerPage: '',
-    filterOptions: {
-      lan: 'Hallands län',
+    filterSettings: {
+
+      lan: '',
       get lanid() {
         return `lanid=${PlatsbankenApp.convertId(this.lan) || ''}&`;
       },
@@ -461,9 +463,9 @@ let PlatsbankenApp = {
 
   filterLists: {
     lanList: [],
-    kommunList: [],
-    yrkesomradeList: [],
-    yrkesgruppList: [],
+    kommunerList: [],
+    yrkesomradenList: [],
+    yrkesgrupperList: [],
   },
 
   staticQueryStrings: {
@@ -478,13 +480,13 @@ let PlatsbankenApp = {
 
 PlatsbankenApp.generateQueryString = function (typeOfQuery) {
   let qString = '';
-  let opts = PlatsbankenApp.userSettings.filterOptions;
+  let opts = PlatsbankenApp.userOptions.filterSettings;
   qString = PlatsbankenApp.staticQueryStrings[typeOfQuery] +
     opts.lanid +
     opts.kommunid +
     opts.yrkesomradeid +
     opts.yrkesgruppid +
-    'antalrader=' + this.userSettings.resultsPerPage +
+    'antalrader=' + this.userOptions.resultsPerPage +
     'sida=1';
   return qString
 }
@@ -500,37 +502,46 @@ PlatsbankenApp.convertId = function (inputName) {
   }
 }
 
-PlatsbankenApp.loadLists = function (requestGroup) {
-
-  fetch(PlatsbankenApp.staticQueryStrings.baseURL + PlatsbankenApp.staticQueryStrings.lan)
+PlatsbankenApp.accessAPI = function (qString = '') {
+  return fetch(PlatsbankenApp.staticQueryStrings.baseURL + qString)
     .then(response => {
       return response.json();
     })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+PlatsbankenApp.saveFilterLists = function () {
+  PlatsbankenApp.accessAPI(PlatsbankenApp.staticQueryStrings.lan)
     .then(response => {
       this.filterLists.lanList = response.soklista.sokdata;
       return
     })
-    .then(res => {
-      fetch(PlatsbankenApp.staticQueryStrings.baseURL + PlatsbankenApp.staticQueryStrings.yrkesomraden)
-        .then(response => {
-          return response.json();
-        })
-        .then(response => {
-          this.filterLists.yrkesomradeList = response.soklista.sokdata;
-          return
-        })
-    })
-    .then(res => {
-      let requestTarget = '';
-      let qString = PlatsbankenApp.staticQueryStrings[requestGroup];
-      requestGroup == 'kommuner' ? requestTarget = 'lanList' : requestTarget = 'yrkesomradenList';
-      for (let item of PlatsbankenApp.filterLists[requestTarget]) {
-        fetch(PlatsbankenApp.staticQueryStrings.baseURL + qString + item.id)
+    .then(
+      PlatsbankenApp.accessAPI(PlatsbankenApp.staticQueryStrings.yrkesomraden)
+      .then(response => {
+        this.filterLists.yrkesomradenList = response.soklista.sokdata;
+        return
+      })
+    )
+    .then(response => {
+      for (let item of PlatsbankenApp.filterLists.lanList) {
+        PlatsbankenApp.accessAPI(PlatsbankenApp.staticQueryStrings.kommuner + item.id)
           .then(response => {
-            return response.json()
+            PlatsbankenApp.filterLists.kommunerList.push(...response.soklista.sokdata);
+            item['kommuner'] = response.soklista.sokdata;
+            return
           })
+      }
+    })
+    .then(response => {
+      console.log("hi");
+      for (let item of PlatsbankenApp.filterLists.yrkesomradenList) {
+        PlatsbankenApp.accessAPI(PlatsbankenApp.staticQueryStrings.yrkesgrupper + item.id)
           .then(response => {
-            item[response.soklista.listnamn + 'List'] = response.soklista.sokdata;
+            PlatsbankenApp.filterLists.yrkesgrupperList.push(...response.soklista.sokdata);
+            item['yrkesgrupper'] = response.soklista.sokdata;
             return
           })
       }
