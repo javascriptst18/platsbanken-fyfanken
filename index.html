@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Roboto:400,400i,700,700i" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
     crossorigin="anonymous">
-  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
   <link rel="stylesheet" href="css/style.css">
   <title>Platsbanken - Fy fanken!</title>
 </head>
@@ -75,18 +75,43 @@
         </p>
       </div>
     </div>
-    <div class="main-wrapper" id="mainWrapper">
+
+    <div class="main-wrapper">
       <aside>
-        <input id="numberOfResults " type="text " placeholder="Number of results " value="10 ">
+
+        <form id="formOfRegions">
+          <label for="listOfRegions">Välj län</label>
+          <select id="listOfRegions">
+            <option value="default">...</option>
+          </select>
+          <input type="submit" value="välj">
+        </form>
+        <form id="formOfCommunes">
+          <label for="listOfCommunes">Välj kommun</label>
+          <select id="listOfCommunes">
+            <option value="default">...</option>
+
+          </select>
+          <input type="submit" value="välj">
+        </form>
+
+        <button id="doSearch">Sök</button>
+
+        <select id="numberOfResults">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+        </select>
       </aside>
       <main>
 
+
       </main>
     </div>
-  </div>
 
-  <footer></footer>
-  <script src="scripts/index.js "></script>
+    <footer></footer>
+    <script src="scripts/index.js "></script>
 </body>
 
 </html>
