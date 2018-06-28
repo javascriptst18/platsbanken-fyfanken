@@ -128,6 +128,7 @@ appendItemToHtmlId = (listItemArr, whereToAppend) => {
 let idHandler = {
   regionList: [], // List over available regions
   communeList: [], // List over communes in selected region
+  workGroupResultList: [],
   regionId: '',
   communeId: '',
   workCategoryId: ''
@@ -271,8 +272,12 @@ formOfWorkCategory.addEventListener('change', async e => {
       listOfWorkCategory.value,
       idHandler.workCategoryList
     );
+    let workGroupQueryString = `${apiCall}platsannonser/soklista/yrkesgrupper?yrkesomradeid=1`;
 
-    console.log(idHandler.workCategoryId);
+    let workGroupResult = await callFetch(workGroupQueryString);
+    idHandler.workGroupResultList = await workGroupResult.soklista.sokdata;
+
+    console.log(idHandler.workGroupResultList);
   }
 });
 
@@ -286,25 +291,48 @@ hidden again with display: none.
 */
 
 doSearch.addEventListener('click', async e => {
+  let amountOfResult = `&sida=1&antalrader=${numberOfResults.value}`;
   let customQueryString = `${apiCall}platsannonser/matchning?lanid=${
     idHandler.regionId
-  }&sida=1&antalrader=${numberOfResults.value}`;
+  }${amountOfResult}`;
 
-  let customQueryStringWithCommune = `${apiCall}platsannonser/matchning?lanid=${
-    idHandler.regionId
-  }&kommunid=${idHandler.communeId}&sida=1&antalrader=${numberOfResults.value}`;
+  let customQueryStringWithCommune = (customQueryString += `&kommunid=${
+    idHandler.communeId
+  }${amountOfResult}`);
+
+  let customQueryStringWithCommuneAndWorkcategory = (customQueryStringWithCommune += `&yrkesomradeid=${
+    idHandler.workCategoryId
+  }${amountOfResult}`);
+
+  let customQueryStringWithoutCommuneButWorkcategory = (customQueryString += `&yrkesomradeid=${
+    idHandler.workCategoryId
+  }${amountOfResult}`);
 
   if (idHandler.communeId === '') {
     let regionCustomSearchResult = await callFetch(customQueryString);
 
     insertArticles(regionCustomSearchResult.matchningslista.matchningdata);
-  } else {
+  } else if (idHandler.workCategoryId === '') {
     let regionAndCommuneCustomSearchResult = await callFetch(
       customQueryStringWithCommune
     );
 
     insertArticles(
       regionAndCommuneCustomSearchResult.matchningslista.matchningdata
+    );
+  } else if (idHandler.workCategoryId !== '' && idHandler.communeId === '') {
+    let regionAndWorkcategoryResult = await callFetch(
+      customQueryStringWithoutCommuneButWorkcategory
+    );
+
+    insertArticles(regionAndWorkcategoryResult.matchningslista.matchningdata);
+  } else {
+    regionCommuneAndWorkCustomSearchResult = await callFetch(
+      customQueryStringWithCommuneAndWorkcategory
+    );
+
+    insertArticles(
+      regionCommuneAndWorkCustomSearchResult.matchningslista.matchningdata
     );
   }
 
