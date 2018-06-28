@@ -11,8 +11,14 @@ const doSearch = document.querySelector('#doSearch');
 const mainWrapper = document.querySelector('#mainWrapper');
 const closeButton = document.querySelector('#closeButton');
 const singleAdContainer = document.querySelector('#singleAdContainer');
-const singleAdContainerInner = document.querySelector('#singleAdContainerInner');
-const singleAdContainerInnerContent = document.querySelector('#singleAdContainerInnerContent');
+const singleAdContainerInner = document.querySelector(
+  '#singleAdContainerInner'
+);
+const singleAdContainerInnerContent = document.querySelector(
+  '#singleAdContainerInnerContent'
+);
+const formOfWorkCategory = document.querySelector('#formOfWorkCategory');
+const listOfWorkCategory = document.querySelector('#listOfWorkCategory');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -104,17 +110,7 @@ appendItemToHtmlId = (listItemArr, whereToAppend) => {
   }
 };
 
-// let communeString = `${apiCall}platsannonser/soklista/kommuner`;
-
-//   let communeListResult = await callFetch(communeString);
-//   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
-//   console.log(idHandler.workCategoryList);
-
-//   let workQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
-
-//   let workCategoryListResult = await callFetch(workQueryString);
-//   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
-//   console.log(idHandler.workCategoryList);
+//
 
 //   await appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
 
@@ -135,8 +131,10 @@ appendItemToHtmlId = (listItemArr, whereToAppend) => {
 let idHandler = {
   regionList: [], // List over available regions
   communeList: [], // List over communes in selected region
+  workGroupResultList: [],
   regionId: '',
-  communeId: ''
+  communeId: '',
+  workCategoryId: ''
 };
 
 /** idHandler.init runs once when the script loads and
@@ -250,13 +248,39 @@ and stored in variable for building search string
 
 */
 
-formOfCommunes.addEventListener('change', e => {
+formOfCommunes.addEventListener('change', async e => {
   e.preventDefault();
   if (listOfCommunes.value !== '...') {
     idHandler.communeId = idHandler.getListId(
       listOfCommunes.value,
       idHandler.communeList
     );
+
+    let workCategoryQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
+
+    let workCategoryListResult = await callFetch(workCategoryQueryString);
+    idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
+    console.log(idHandler.workCategoryList);
+
+    appendItemToHtmlId(idHandler.workCategoryList, listOfWorkCategory);
+    formOfWorkCategory.style.display = 'block';
+  }
+});
+
+formOfWorkCategory.addEventListener('change', async e => {
+  e.preventDefault();
+  console.log(listOfWorkCategory.value);
+  if (listOfWorkCategory.value !== '...') {
+    idHandler.workCategoryId = idHandler.getListId(
+      listOfWorkCategory.value,
+      idHandler.workCategoryList
+    );
+    let workGroupQueryString = `${apiCall}platsannonser/soklista/yrkesgrupper?yrkesomradeid=1`;
+
+    let workGroupResult = await callFetch(workGroupQueryString);
+    idHandler.workGroupResultList = await workGroupResult.soklista.sokdata;
+
+    console.log(idHandler.workGroupResultList);
   }
 });
 
@@ -270,25 +294,48 @@ hidden again with display: none.
 */
 
 doSearch.addEventListener('click', async e => {
+  let amountOfResult = `&sida=1&antalrader=${numberOfResults.value}`;
   let customQueryString = `${apiCall}platsannonser/matchning?lanid=${
     idHandler.regionId
-  }&sida=1&antalrader=${numberOfResults.value}`;
+  }${amountOfResult}`;
 
-  let customQueryStringWithCommune = `${apiCall}platsannonser/matchning?lanid=${
-    idHandler.regionId
-  }&kommunid=${idHandler.communeId}&sida=1&antalrader=${numberOfResults.value}`;
+  let customQueryStringWithCommune = (customQueryString += `&kommunid=${
+    idHandler.communeId
+  }${amountOfResult}`);
+
+  let customQueryStringWithCommuneAndWorkcategory = (customQueryStringWithCommune += `&yrkesomradeid=${
+    idHandler.workCategoryId
+  }${amountOfResult}`);
+
+  let customQueryStringWithoutCommuneButWorkcategory = (customQueryString += `&yrkesomradeid=${
+    idHandler.workCategoryId
+  }${amountOfResult}`);
 
   if (idHandler.communeId === '') {
     let regionCustomSearchResult = await callFetch(customQueryString);
 
     insertArticles(regionCustomSearchResult.matchningslista.matchningdata);
-  } else {
+  } else if (idHandler.workCategoryId === '') {
     let regionAndCommuneCustomSearchResult = await callFetch(
       customQueryStringWithCommune
     );
 
     insertArticles(
       regionAndCommuneCustomSearchResult.matchningslista.matchningdata
+    );
+  } else if (idHandler.workCategoryId !== '' && idHandler.communeId === '') {
+    let regionAndWorkcategoryResult = await callFetch(
+      customQueryStringWithoutCommuneButWorkcategory
+    );
+
+    insertArticles(regionAndWorkcategoryResult.matchningslista.matchningdata);
+  } else {
+    regionCommuneAndWorkCustomSearchResult = await callFetch(
+      customQueryStringWithCommuneAndWorkcategory
+    );
+
+    insertArticles(
+      regionCommuneAndWorkCustomSearchResult.matchningslista.matchningdata
     );
   }
 
@@ -303,14 +350,12 @@ doSearch.addEventListener('click', async e => {
  * Use "await getJobDetails(jobId)" (Otherwise it'll return an unresolved promise)
  * */
 
-const getJobDetails = async (jobId) => {
+const getJobDetails = async jobId => {
   let queryString = `${apiCall}platsannonser/${jobId}`;
   return await callFetch(queryString);
+};
 
-
-}
-
-mainContainer.addEventListener('click', async (e) => {
+mainContainer.addEventListener('click', async e => {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
     const annonsID = e.target.parentElement.id;
@@ -318,24 +363,36 @@ mainContainer.addEventListener('click', async (e) => {
       let annonsContent = await getJobDetails(annonsID);
       console.log(annonsContent);
       let annonsText = annonsContent.platsannons.annons.annonstext;
-      annonsText = '<p>' + annonsText.replace(/\n([ \t]*\n)+/g, '</p><p>')
-        .replace(/\n/g, '<br />') + '</p>';
-      let lastDayApply = formatDate(annonsContent.platsannons.ansokan.sista_ansokningsdag);
+      annonsText =
+        '<p>' +
+        annonsText
+          .replace(/\n([ \t]*\n)+/g, '</p><p>')
+          .replace(/\n/g, '<br />') +
+        '</p>';
+      let lastDayApply = formatDate(
+        annonsContent.platsannons.ansokan.sista_ansokningsdag
+      );
       let annonsObject = `
-      <h2 class="single-rubrik">${annonsContent.platsannons.annons.annonsrubrik}</h2>
+      <h2 class="single-rubrik">${
+        annonsContent.platsannons.annons.annonsrubrik
+      }</h2>
       <div class="single-ad-left">
     <p>${annonsText}</p>
     </div>
     <div class="single-ad-right">
-    ${annonsContent.platsannons.arbetsplats.logotypurl === undefined ? '' : '<img src="' + annonsContent.platsannons.arbetsplats.logotypurl + '">'}
+    ${
+      annonsContent.platsannons.arbetsplats.logotypurl === undefined
+        ? ''
+        : '<img src="' + annonsContent.platsannons.arbetsplats.logotypurl + '">'
+    }
     <span class="job-title"><i class="fas fa-tag"></i>${
       annonsContent.platsannons.annons.yrkesbenamning
     }</span>
      <span class="work-place"><i class="fas fa-at"></i>${
-      annonsContent.platsannons.arbetsplats.arbetsplatsnamn
+       annonsContent.platsannons.arbetsplats.arbetsplatsnamn
      }</span>
      <span class="location"><i class="fas fa-map-marker-alt"></i>${
-      annonsContent.platsannons.annons.kommunnamn
+       annonsContent.platsannons.annons.kommunnamn
      }</span>
      <span class="latest-application-date"><i class="far fa-clock"></i>Ansök senast ${lastDayApply}</span>
   
@@ -344,7 +401,10 @@ mainContainer.addEventListener('click', async (e) => {
     `;
       singleAdContainerInner.dataset.annonsid = annonsID;
       singleAdContainerInnerContent.innerHTML = '';
-      singleAdContainerInnerContent.insertAdjacentHTML('beforeend', annonsObject);
+      singleAdContainerInnerContent.insertAdjacentHTML(
+        'beforeend',
+        annonsObject
+      );
     }
     mainWrapper.classList.toggle('fadeout');
     singleAdContainer.classList.toggle('hidden');
@@ -355,10 +415,10 @@ mainContainer.addEventListener('click', async (e) => {
         mainWrapper.classList.remove('fadeout');
       }
     });
-    closeButton.addEventListener('click', function (e) {
+    closeButton.addEventListener('click', function(e) {
       e.preventDefault();
       singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
       mainWrapper.classList.remove('fadeout');
-    })
+    });
   }
 });
