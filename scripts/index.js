@@ -11,7 +11,11 @@ const doSearch = document.querySelector('#doSearch');
 const mainWrapper = document.querySelector('#mainWrapper');
 const closeButton = document.querySelector('#closeButton');
 const singleAdContainer = document.querySelector('#singleAdContainer');
-const singleAdContainerInner = document.querySelector('#singleAdContainerInner');
+const singleAdContainerInner = document.querySelector(
+  '#singleAdContainerInner'
+);
+const formOfWorkCategory = document.querySelector('#formOfWorkCategory');
+const listOfWorkCategory = document.querySelector('#listOfWorkCategory');
 
 const apiCall = 'http://api.arbetsformedlingen.se/af/v0/';
 
@@ -103,17 +107,7 @@ appendItemToHtmlId = (listItemArr, whereToAppend) => {
   }
 };
 
-// let communeString = `${apiCall}platsannonser/soklista/kommuner`;
-
-//   let communeListResult = await callFetch(communeString);
-//   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
-//   console.log(idHandler.workCategoryList);
-
-//   let workQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
-
-//   let workCategoryListResult = await callFetch(workQueryString);
-//   idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
-//   console.log(idHandler.workCategoryList);
+//
 
 //   await appendItemToHtmlId(idHandler.workCategoryList, listOfCommunes);
 
@@ -135,7 +129,8 @@ let idHandler = {
   regionList: [], // List over available regions
   communeList: [], // List over communes in selected region
   regionId: '',
-  communeId: ''
+  communeId: '',
+  workCategoryId: ''
 };
 
 /** idHandler.init runs once when the script loads and
@@ -249,13 +244,35 @@ and stored in variable for building search string
 
 */
 
-formOfCommunes.addEventListener('change', e => {
+formOfCommunes.addEventListener('change', async e => {
   e.preventDefault();
   if (listOfCommunes.value !== '...') {
     idHandler.communeId = idHandler.getListId(
       listOfCommunes.value,
       idHandler.communeList
     );
+
+    let workCategoryQueryString = `${apiCall}platsannonser/soklista/yrkesomraden`;
+
+    let workCategoryListResult = await callFetch(workCategoryQueryString);
+    idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
+    console.log(idHandler.workCategoryList);
+
+    appendItemToHtmlId(idHandler.workCategoryList, listOfWorkCategory);
+    formOfWorkCategory.style.display = 'block';
+  }
+});
+
+formOfWorkCategory.addEventListener('change', async e => {
+  e.preventDefault();
+  console.log(listOfWorkCategory.value);
+  if (listOfWorkCategory.value !== '...') {
+    idHandler.workCategoryId = idHandler.getListId(
+      listOfWorkCategory.value,
+      idHandler.workCategoryList
+    );
+
+    console.log(idHandler.workCategoryId);
   }
 });
 
@@ -302,14 +319,12 @@ doSearch.addEventListener('click', async e => {
  * Use "await getJobDetails(jobId)" (Otherwise it'll return an unresolved promise)
  * */
 
-const getJobDetails = async (jobId) => {
+const getJobDetails = async jobId => {
   let queryString = `${apiCall}platsannonser/${jobId}`;
   return await callFetch(queryString);
+};
 
-
-}
-
-mainContainer.addEventListener('click', async (e) => {
+mainContainer.addEventListener('click', async e => {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
     const annonsID = e.target.parentElement.id;
@@ -328,10 +343,10 @@ mainContainer.addEventListener('click', async (e) => {
         mainWrapper.classList.remove('fadeout');
       }
     });
-    closeButton.addEventListener('click', function (e) {
+    closeButton.addEventListener('click', function(e) {
       e.preventDefault();
       singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
       mainWrapper.classList.remove('fadeout');
-    })
+    });
   }
 });
