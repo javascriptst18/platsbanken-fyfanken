@@ -356,25 +356,17 @@ mainContainer.addEventListener('click', async e => {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
     const annonsID = e.target.parentElement.id;
-    if (singleAdContainerInner.dataset.annonsid !== annonsID) {
-      let annonsContent = await getJobDetails(annonsID);
-      console.log(annonsContent);
-      let annonsText = annonsContent.platsannons.annons.annonstext;
-      annonsText =
-        '<p>' +
-        annonsText
-          .replace(/\n([ \t]*\n)+/g, '</p><p>')
-          .replace(/\n/g, '<br />') +
-        '</p>';
-      let lastDayApply = formatDate(
-        annonsContent.platsannons.ansokan.sista_ansokningsdag
-      );
-      let annonsObject = `
-      <h2 class="single-rubrik">${
-        annonsContent.platsannons.annons.annonsrubrik
-      }</h2>
+    let annonsContent = await getJobDetails(annonsID);
+    console.log(annonsContent);
+    let annonsText = annonsContent.platsannons.annons.annonstext;
+    annonsText = '<p>' + annonsText.replace(/\n([ \t]*\n)+/g, '</p><p>')
+      .replace(/\n/g, '<br />') + '</p>';
+    let lastDayApply = formatDate(annonsContent.platsannons.ansokan.sista_ansokningsdag);
+    let annonsObject = `
+      <h2 class="single-rubrik">${annonsContent.platsannons.annons.annonsrubrik}</h2>
       <div class="single-ad-left">
     <p>${annonsText}</p>
+    <a class="apply-link" href="${annonsContent.platsannons.ansokan.webbplats}" target="_blank">Ansök nu</a>
     </div>
     <div class="single-ad-right">
     ${
@@ -392,17 +384,15 @@ mainContainer.addEventListener('click', async e => {
        annonsContent.platsannons.annons.kommunnamn
      }</span>
      <span class="latest-application-date"><i class="far fa-clock"></i>Ansök senast ${lastDayApply}</span>
-  
+  <a class="apply-link" href="${annonsContent.platsannons.ansokan.webbplats}" target="_blank">Ansök nu</a>
      </div>
     </div>
     `;
-      singleAdContainerInner.dataset.annonsid = annonsID;
-      singleAdContainerInnerContent.innerHTML = '';
-      singleAdContainerInnerContent.insertAdjacentHTML(
-        'beforeend',
-        annonsObject
-      );
-    }
+    singleAdContainerInner.dataset.annonsid = annonsID;
+    singleAdContainerInnerContent.innerHTML = '';
+    singleAdContainerInnerContent.insertAdjacentHTML('beforeend', annonsObject);
+    let scrollPosition = window.pageYOffset;
+    window.scrollTo(0, 0);
     mainWrapper.classList.toggle('fadeout');
     singleAdContainer.classList.toggle('hidden');
     document.addEventListener('keyup', event => {
@@ -410,12 +400,27 @@ mainContainer.addEventListener('click', async e => {
       if (event.key === 'Escape' || event.keyCode === 27) {
         singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
         mainWrapper.classList.remove('fadeout');
+        singleAdContainerInnerContent.innerHTML = '';
+        setTimeout(function () {
+          singleAdContainerInnerContent.innerHTML = '';
+          window.scrollTo({
+            top: scrollPosition,
+            behavior: "smooth"
+          });
+        }, 200);
       }
     });
-    closeButton.addEventListener('click', function(e) {
+    closeButton.addEventListener('click', function (e) {
       e.preventDefault();
       singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
       mainWrapper.classList.remove('fadeout');
-    });
+      setTimeout(function () {
+        singleAdContainerInnerContent.innerHTML = '';
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: "smooth"
+        });
+      }, 200);
+    })
   }
 });
