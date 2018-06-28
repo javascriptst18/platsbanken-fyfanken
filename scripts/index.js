@@ -29,7 +29,7 @@ const searchStrings = {
 // store data from fetch calls in variables
 const fetchData = {
   tenLatestJobsInStockholm: [],
-  totaltIStockholm: '',
+  totalAmountOfAdsInRegion: '',
   fromTextSearch: []
 };
 
@@ -88,7 +88,7 @@ const appendInitalDataToHtml = async () => {
   fetchData.tenLatestJobsInStockholm =
     returnFromFetchData.matchningslista.matchningdata;
 
-  fetchData.totaltIStockholm = returnFromFetchData.antal_platsannonser;
+  fetchData.totalAmountOfAdsInRegion = returnFromFetchData.antal_platsannonser;
 
   insertArticles(fetchData.tenLatestJobsInStockholm);
 };
