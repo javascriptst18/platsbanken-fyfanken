@@ -298,10 +298,27 @@ doSearch.addEventListener('click', async e => {
   idHandler.regionId = '';
 });
 
-mainContainer.addEventListener('click', function (e) {
+/** Function that returns an object with the details for a given anonsId.
+ * Use "await getJobDetails(jobId)" (Otherwise it'll return an unresolved promise)
+ * */
+
+const getJobDetails = async (jobId) => {
+  let queryString = `${apiCall}platsannonser/${jobId}`;
+  return await callFetch(queryString);
+
+
+}
+
+mainContainer.addEventListener('click', async (e) => {
   // Add Event listener for clicks inside main container
   if (e.target.classList.contains('expand-job-ad')) {
     const annonsID = e.target.parentElement.id;
+    let annonsContent = await getJobDetails(annonsID);
+    console.log(annonsContent.platsannons);
+    let annonsObject = `
+    <h2>${annonsContent.platsannons.annons.annonsrubrik}</h2>
+    `;
+    singleAdContainerInner.insertAdjacentHTML('beforeend', annonsObject);
     mainWrapper.classList.toggle('fadeout');
     singleAdContainer.classList.toggle('hidden');
     document.addEventListener('keyup', event => {
