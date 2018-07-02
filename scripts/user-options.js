@@ -7,7 +7,7 @@ export let userOptions = {
     region: ['Stockholms län'],
     county: [],
     jobCategory: [],
-    jobGroup: [],
+    jobGroup: []
   },
   favorites: []
 }

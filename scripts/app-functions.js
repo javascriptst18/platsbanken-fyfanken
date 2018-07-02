@@ -8,32 +8,45 @@ export let accessAPI = function (queryString = '') {
     });
 };
 
+export let buildQueryString = function (options) {
+  let queryString = '';
+  
+  return queryString;
+}
+
 export let getFilterList = function (requestedList, parentListId = '') {
-  this.accessAPI(this.staticQueryStrings[requestedList] + parentListId)
+  return this.accessAPI(this.staticQueryStrings[requestedList] + parentListId)
     .then(response => {
-      console.log(response);
-      return response.soklista.sokdata;
+      return response;
     })
 };
 
-export let buildMatchingQueryString = function (options) {
-  let matchingQueryString = this.staticQueryStrings.matching;
+export let saveFilterList = function (filterList, app) {
+  let listName = app.translateWord(filterList.soklista.listnamn);
+  app.filterLists[listName + 'List'] = filterList.soklista.sokdata;
+  console.log(app);
+}
 
-  return matchingQueryString;
-};
+export let executeSearchBoxQuery = function () {
 
-export let executeSearchQuery = function (searchType, options) {
-  let searchQueryResults = {};
+  return updateJobsDisplayed();
+}
 
-  return searchQueryResults;
-};
+export let updateJobsDisplayed = function () {
 
-export let convertToId = function (nameString) {
-  let idNumber = '';
+}
 
-  return idNumber;
-};
+export let toggleFilterSetting = function (filterSetting) {
 
-export let filterOptionChecked = function () {
+  return updateJobsDisplayed();
+}
 
-};
+export let loadNextPage = function () {
+
+  return updateJobsDisplayed();
+}
+
+export let initiate = function () {
+  this.getFilterList('region').then(response => saveFilterList(response, this));
+  this.getFilterList('jobCategory').then(response => saveFilterList(response, this));
+}

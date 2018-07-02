@@ -6,7 +6,7 @@ import { htmlTemplates } from './html-templates';
 import { translations, translateWord } from './translations';
 import { userOptions } from './user-options';
 import { filterLists } from './filter-lists';
-import { accessAPI, getFilterList, buildMatchingQueryString } from './app-functions';
+import { accessAPI, getFilterList, buildMatchingQueryString, initiate } from './app-functions';
 
 let PlatsbankenApp = {
   userOptions,
@@ -18,17 +18,11 @@ let PlatsbankenApp = {
   translateWord,
   accessAPI,
   getFilterList,
-  buildMatchingQueryString
+  buildMatchingQueryString,
+  initiate
 };
 
-PlatsbankenApp.getFilterList('region');
-PlatsbankenApp.getFilterList('jobCategory');
-PlatsbankenApp.getFilterList('counties','9');
-PlatsbankenApp.translateWord('kommun');
-console.log(PlatsbankenApp.buildMatchingQueryString());
-
-console.log(PlatsbankenApp);
-
+PlatsbankenApp.initiate();
 
     // get regionId() {
     //     return `lanid=${PlatsbankenApp.convertId(this.lan) || ''}&`;
