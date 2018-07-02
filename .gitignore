@@ -5,3 +5,5 @@ css
 *.log
 node_modules
 Thumbs.db
+.cache/
+dist/
