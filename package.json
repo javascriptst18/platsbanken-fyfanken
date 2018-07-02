@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/javascriptst18/platsbanken-fyfanken/issues"
   },
-  "homepage": "https://github.com/javascriptst18/platsbanken-fyfanken#readme"
+  "homepage": "https://github.com/javascriptst18/platsbanken-fyfanken#readme",
+  "devDependencies": {
+    "node-sass": "^4.9.0"
+  }
 }

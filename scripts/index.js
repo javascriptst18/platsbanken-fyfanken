@@ -1,3 +1,5 @@
+import '../scss/style.scss';
+
 const searchBox = document.querySelector('#searchBox');
 const searchForm = document.querySelector('#searchForm');
 const numberOfResults = document.querySelector('#numberOfResults');
@@ -112,20 +114,6 @@ appendItemToHtmlId = (listItemArr, whereToAppend) => {
   }
 };
 
-/** idHandler is an object that converts string
- *  inputs to unique id values that can be used in API queries.
- *  It also has two properties that are arrays with all lan and yrkesområden.
- *
- *  Usage:
- *          idHandler.getMe( 'string with län or yrkesområde name' ).id   -> returns id
- *                                                                  .namn -> returns full name
- *                                                                  .antal_ledigajobb - > returns antal_ledigajobb for the län or yrkesområde
- *                                                                  .antal_platsannonser - > returns platsannonser for the län or yrkesområde
- *
- *          idHandler.lanList -> An array of objects with all län and the above values.
- *          idHandler.yrkesomradeList - > An array of objects with all yrkesområden and the above values
- * */
-
 let idHandler = {
   regionList: [], // List over available regions
   communeList: [], // List over communes in selected region
@@ -135,10 +123,6 @@ let idHandler = {
   workCategoryId: ''
 };
 
-/** idHandler.init runs once when the script loads and
- * fetches the län and yrkesområden lists and stores it
- * to make conversions without repeating API calls.
- */
 
 idHandler.init = async () => {
   // build query string for region fetch
@@ -150,17 +134,6 @@ idHandler.init = async () => {
 
   await appendItemToHtmlId(idHandler.regionList, listOfRegions);
 };
-
-/** idHandler.getMe is a method that will loop through all län and yrkesområde
- * and return an object with the properties.
- *
- * id, namn, antal_platsannonser, antal_ledigajobb
- * for the first match for the given string.
- *
- * The string can be partial ie. 'Stockholm' will match 'Stockholms län'
- * but for yrkesområde it will return the object for the first partial match only.
- *
- */
 
 idHandler.getListId = (stringValue, list) => {
   for (item of list) {
