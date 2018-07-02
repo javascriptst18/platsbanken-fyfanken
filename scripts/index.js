@@ -3,10 +3,10 @@ import '../scss/style.scss';
 import { staticQueryStrings } from './static-query-strings';
 import { htmlSelectors } from './html-selectors';
 import { htmlTemplates } from './html-templates';
-import { translations } from './translations';
+import { translations, translateWord } from './translations';
 import { userOptions } from './user-options';
 import { filterLists } from './filter-lists';
-import { accessAPI, getFilterList } from './app-functions';
+import { accessAPI, getFilterList, buildMatchingQueryString } from './app-functions';
 
 let PlatsbankenApp = {
   userOptions,
@@ -15,12 +15,17 @@ let PlatsbankenApp = {
   htmlSelectors,
   htmlTemplates,
   translations,
+  translateWord,
   accessAPI,
-  getFilterList
+  getFilterList,
+  buildMatchingQueryString
 };
 
 PlatsbankenApp.getFilterList('region');
 PlatsbankenApp.getFilterList('jobCategory');
+PlatsbankenApp.getFilterList('counties','9');
+PlatsbankenApp.translateWord('kommun');
+console.log(PlatsbankenApp.buildMatchingQueryString());
 
 console.log(PlatsbankenApp);
 

@@ -4,5 +4,5 @@ export let staticQueryStrings = {
   jobCategory: 'platsannonser/soklista/yrkesomraden',
   counties: 'platsannonser/soklista/kommuner?lanid=',
   jobGroups: 'platsannonser/soklista/yrkesgrupper?yrkesomradeid=',
-  matchingSearch: 'platsannonser/matchning?'
+  matching: 'platsannonser/matchning?'
 };

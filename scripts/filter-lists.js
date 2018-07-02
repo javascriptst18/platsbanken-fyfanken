@@ -1,6 +1,6 @@
 export let filterLists = {
   regionList: [],
   countyList: [],
-  jobCategoriesList: [],
-  jobGroupsList: [],
+  jobCategoryList: [],
+  jobGroupList: [],
 }
