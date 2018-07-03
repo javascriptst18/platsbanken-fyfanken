@@ -1,3 +1,10 @@
+/**
+ * 
+ * Translations of terms used by the API and a translator 
+ * function to make the code easier to read
+ * 
+ */ 
+
 export let translations = {
   lan: 'region',
   kommun: 'county',
@@ -11,7 +18,7 @@ export let translations = {
   sida: 'currentPage'
 }
 
-export let translateWord = function (inputWord) {
+export let translate = function (inputWord) {
   for (let word in this.translations) {
     if (inputWord == word) {
       return this.translations[word];

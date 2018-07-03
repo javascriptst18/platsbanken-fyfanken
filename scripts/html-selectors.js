@@ -1,8 +1,17 @@
+
+/**
+ * 
+ * References to all the 
+ * DOM elements that might 
+ * require interaction.
+ * 
+ */
+
 export let htmlSelectors = {
   searchBox: document.querySelector('#searchBox'),
   searchForm: document.querySelector('#searchForm'),
   numberOfResults: document.querySelector('#numberOfResults'),
-  mainContainer: document.querySelector('main'), // Pick the main container in the DOM
+  mainContainer: document.querySelector('main'),
   formOfRegions: document.querySelector('#formOfRegions'),
   formOfCommunes: document.querySelector('#formOfCommunes'),
   listOfRegions: document.querySelector('#listOfRegions'),

@@ -1,3 +1,17 @@
+/**
+ * 
+ * MODEL FUNCTIONS
+ * 
+ * All the functions used by the page 
+ * to retrieve and organize data.
+ * 
+ * Functions that manipulate the DOM or
+ * allow the user to interact with it
+ * should be placed in either the view
+ * controller files.
+ * 
+ */
+
 export let accessAPI = function (queryString = '') {
   return fetch(this.staticQueryStrings.baseURL + queryString)
     .then(response => {
@@ -10,7 +24,7 @@ export let accessAPI = function (queryString = '') {
 
 export let buildQueryString = function (options) {
   let queryString = '';
-  
+  // Placeholder function
   return queryString;
 }
 
@@ -22,28 +36,9 @@ export let getFilterList = function (requestedList, parentListId = '') {
 };
 
 export let saveFilterList = function (filterList, app) {
-  let listName = app.translateWord(filterList.soklista.listnamn);
+  let listName = app.translate(filterList.soklista.listnamn);
   app.filterLists[listName + 'List'] = filterList.soklista.sokdata;
   console.log(app);
-}
-
-export let executeSearchBoxQuery = function () {
-
-  return updateJobsDisplayed();
-}
-
-export let updateJobsDisplayed = function () {
-
-}
-
-export let toggleFilterSetting = function (filterSetting) {
-
-  return updateJobsDisplayed();
-}
-
-export let loadNextPage = function () {
-
-  return updateJobsDisplayed();
 }
 
 export let initiate = function () {

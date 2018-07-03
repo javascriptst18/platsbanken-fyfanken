@@ -1,3 +1,11 @@
+/**
+ * 
+ *  Static portions of search query 
+ *  strings for the arbetsförmedlingen 
+ *  API
+ * 
+ */
+
 export let staticQueryStrings = {  
   baseURL: 'http://api.arbetsformedlingen.se/af/v0/',
   region: 'arbetsformedling/soklista/lan',

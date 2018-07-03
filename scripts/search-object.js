@@ -1,3 +1,9 @@
+/**
+ * 
+ * WIP - Not used by anything yet
+ * 
+ */
+
 export let matchingSearchParameters = {
   lanid: '',
   landid: '',

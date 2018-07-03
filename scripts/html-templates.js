@@ -1,3 +1,13 @@
+/**
+ * 
+ * Template literals for HTML insertions
+ * into the DOM.
+ * 
+ * Not being used yet.
+ * 
+ */
+
+
 export let htmlTemplates = {
 
   article: `<article id=${''}>

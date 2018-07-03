@@ -1,12 +1,21 @@
 import '../scss/style.scss';
 
+/**
+ * PlatsbankenApp is the wrapper object for
+ * the JS used by the site. Everything should
+ * be a property or method of this object so
+ * that nothing leaks into the global scope. 
+ */
+
 import { staticQueryStrings } from './static-query-strings';
 import { htmlSelectors } from './html-selectors';
 import { htmlTemplates } from './html-templates';
-import { translations, translateWord } from './translations';
+import { translations, translate } from './translations';
 import { userOptions } from './user-options';
 import { filterLists } from './filter-lists';
-import { accessAPI, getFilterList, buildMatchingQueryString, initiate } from './app-functions';
+import { accessAPI, getFilterList, buildMatchingQueryString, initiate } from './model-functions';
+import { updateJobsDisplayed } from './view-functions';
+import { executeSearchBoxQuery, toggleFilterSetting, loadNextPage } from './controller-functions';
 
 let PlatsbankenApp = {
   userOptions,
@@ -15,17 +24,25 @@ let PlatsbankenApp = {
   htmlSelectors,
   htmlTemplates,
   translations,
-  translateWord,
+  translate,
   accessAPI,
   getFilterList,
   buildMatchingQueryString,
+  updateJobsDisplayed,
+  executeSearchBoxQuery,
+  toggleFilterSetting,
+  loadNextPage,
   initiate
 };
 
-PlatsbankenApp.initiate();
+PlatsbankenApp.initiate(); // Loads regions and jobCategories from the API for the filter.
 
-    // get regionId() {
-    //     return `lanid=${PlatsbankenApp.convertId(this.lan) || ''}&`;
+/**
+ * Code below this line is from previous versions.
+ */
+
+// get regionId() {
+//     return `lanid=${PlatsbankenApp.convertId(this.lan) || ''}&`;
 
 // const searchStrings = {
 //   initalSearchString: 'platsannonser/matchning?lanid=1&sida=1&antalrader=10'
