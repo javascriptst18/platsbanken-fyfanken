@@ -35,7 +35,6 @@ export function saveFilterList(requestedList, parentItemName = '') {
 export function initiate() {
   this.saveFilterList('region')
     .then(this.saveFilterList('jobCategory'))
-    .then(this.updateFiltersDisplayed('region'));
 }
 
 export function convertNameToObj(inputString) {
