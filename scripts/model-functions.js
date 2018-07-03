@@ -35,10 +35,22 @@ export function saveFilterList(requestedList, parentItemName = '') {
 export function initiate() {
   this.saveFilterList('region')
     .then(this.saveFilterList('jobCategory'))
-    .then(this.toggleFilterSetting('Stockholms län'))
-    .then(this.toggleFilterSetting('Administration, ekonomi, juridik'))
+    .then(console.log(this))
+    .then(this.insertHTML(this.htmlSelectors.filters,'Filter','filter'))
 }
 
 export function convertNameToObj(inputString) {
-  return 1;
+
+}
+
+export function searchInArrayOfObjects(keyName, keyValue, arr) {
+  let matchFound = false;
+  arr.forEach((e,i,a) => {
+    if (matchFound === true) {return};
+    Object.keys(e).forEach((ee,ii,aa) => {
+      if (e[keyName] === keyValue) {
+        matchFound = true;
+      }
+    })
+  })
 }

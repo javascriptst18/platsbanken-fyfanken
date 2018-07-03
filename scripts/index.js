@@ -8,19 +8,19 @@ import '../scss/style.scss';
  */
 
 import staticQueryStrings from './static-query-strings';
-import htmlSelectors from './html-selectors';
 import { translations, translate } from './translations';
 import userOptions from './user-options';
 import filterLists from './filter-lists';
 import { accessAPI, saveFilterList, buildMatchingQueryString, convertNameToObj, initiate } from './model-functions';
-import { updateJobsDisplayed, updateFiltersDisplayed } from './view-functions';
+import { updateJobsDisplayed, updateFiltersDisplayed, insertHTML, htmlSelectors } from './view-functions';
 import { executeSearchBoxQuery, toggleFilterSetting, loadNextPage } from './controller-functions';
+// import htmlSelectors from './html-selectors';
 
 const PlatsbankenApp = {
+  htmlSelectors,
   userOptions,
   filterLists,
   staticQueryStrings,
-  htmlSelectors,
   translations,
   translate,
   accessAPI,
@@ -29,10 +29,11 @@ const PlatsbankenApp = {
   convertNameToObj,
   updateJobsDisplayed,
   updateFiltersDisplayed,
+  insertHTML,
   executeSearchBoxQuery,
   toggleFilterSetting,
   loadNextPage,
-  initiate,
+  initiate
 };
 
 PlatsbankenApp.initiate(); // Loads regions and jobCategories from the API for the filter.

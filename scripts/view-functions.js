@@ -12,6 +12,27 @@
  *
  */
 
+ export const htmlSelectors = {
+   filters: document.querySelector('#filters'),
+   allFilters: document.querySelectorAll('.filter-button'),
+   searchBox: document.querySelector('#searchBox'),
+   searchForm: document.querySelector('#searchForm'),
+   numberOfResults: document.querySelector('#numberOfResults'),
+   mainContainer: document.querySelector('main'),
+   formOfRegions: document.querySelector('#formOfRegions'),
+   formOfCommunes: document.querySelector('#formOfCommunes'),
+   listOfRegions: document.querySelector('#listOfRegions'),
+   listOfCommunes: document.querySelector('#listOfCommunes'),
+   doSearch: document.querySelector('#doSearch'),
+   mainWrapper: document.querySelector('#mainWrapper'),
+   closeButton: document.querySelector('#closeButton'),
+   singleAdContainer: document.querySelector('#singleAdContainer'),
+   singleAdContainerInner: document.querySelector('#singleAdContainerInner'),
+   singleAdContainerInnerContent: document.querySelector('#singleAdContainerInnerContent'),
+   formOfWorkCategory: document.querySelector('#formOfWorkCategory'),
+   listOfWorkCategory: document.querySelector('#listOfWorkCategory'),
+ };
+
 export function updateJobsDisplayed() {
   // Placeholder function
 }
@@ -34,12 +55,12 @@ function buildAd(adObject) {
   return adString;
 }
 
-function buildFilter(filterObject) {
-  const filterString = `<span> ${filterObject.namn}</span>`;
+function buildFilter(filterName) {
+  const filterString = `<p> ${filterName}</p>`;
   return filterString;
 }
 
-function insertHTML(targetSelector, insertedObject, objectType) {
+export function insertHTML(targetSelector, insertedObject, objectType) {
   let insertionString = '';
   switch (objectType) {
     case 'ad':
