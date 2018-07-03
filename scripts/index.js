@@ -4,35 +4,35 @@ import '../scss/style.scss';
  * PlatsbankenApp is the wrapper object for
  * the JS used by the site. Everything should
  * be a property or method of this object so
- * that nothing leaks into the global scope. 
+ * that nothing leaks into the global scope.
  */
 
-import { staticQueryStrings } from './static-query-strings';
-import { htmlSelectors } from './html-selectors';
-import { htmlTemplates } from './html-templates';
+import staticQueryStrings from './static-query-strings';
+import htmlSelectors from './html-selectors';
+import htmlTemplates from './html-templates';
 import { translations, translate } from './translations';
-import { userOptions } from './user-options';
-import { filterLists } from './filter-lists';
+import userOptions from './user-options';
+import filterLists from './filter-lists';
 import { accessAPI, getFilterList, buildMatchingQueryString, initiate } from './model-functions';
-import { updateJobsDisplayed } from './view-functions';
+import updateJobsDisplayed from './view-functions';
 import { executeSearchBoxQuery, toggleFilterSetting, loadNextPage } from './controller-functions';
 
-let PlatsbankenApp = {
-  userOptions,
-  filterLists,
-  staticQueryStrings,
-  htmlSelectors,
-  htmlTemplates,
-  translations,
-  translate,
-  accessAPI,
-  getFilterList,
-  buildMatchingQueryString,
-  updateJobsDisplayed,
-  executeSearchBoxQuery,
-  toggleFilterSetting,
-  loadNextPage,
-  initiate
+const PlatsbankenApp = {
+    userOptions,
+    filterLists,
+    staticQueryStrings,
+    htmlSelectors,
+    htmlTemplates,
+    translations,
+    translate,
+    accessAPI,
+    getFilterList,
+    buildMatchingQueryString,
+    updateJobsDisplayed,
+    executeSearchBoxQuery,
+    toggleFilterSetting,
+    loadNextPage,
+    initiate,
 };
 
 PlatsbankenApp.initiate(); // Loads regions and jobCategories from the API for the filter.
@@ -100,7 +100,7 @@ PlatsbankenApp.initiate(); // Loads regions and jobCategories from the API for t
 // };
 
 // /*
-//   Append 10 latest jobs to variable and append total jobs in Stockholm to variable. 
+//   Append 10 latest jobs to variable and append total jobs in Stockholm to variable.
 //   Push 10 latest array to HTML injection function
 // */
 
@@ -189,10 +189,10 @@ PlatsbankenApp.initiate(); // Loads regions and jobCategories from the API for t
 
 // /*
 
-// if select value in region dropdown has a region name the regions id is saved to variable 
-// idHandler.regionId and is used to build query string to fetch the communes belonging to 
-// the region. After fetch of list of communes the communes are dynamically appended to the 
-// communes form below. The commune form and the search button is also set to display block 
+// if select value in region dropdown has a region name the regions id is saved to variable
+// idHandler.regionId and is used to build query string to fetch the communes belonging to
+// the region. After fetch of list of communes the communes are dynamically appended to the
+// communes form below. The commune form and the search button is also set to display block
 // in the end to show on screen.
 
 // */
@@ -277,7 +277,7 @@ PlatsbankenApp.initiate(); // Loads regions and jobCategories from the API for t
 
 // Search button that take the stored id of region and commune and makes a query. If commune is left blank
 // search query is built only with region id. After query the fetched data is appended inside main. The variables
-// is then restored to default value in preparation for new search and search button and commune dropdwn is 
+// is then restored to default value in preparation for new search and search button and commune dropdwn is
 // hidden again with display: none.
 
 // */
@@ -410,7 +410,7 @@ PlatsbankenApp.initiate(); // Loads regions and jobCategories from the API for t
 //         }, 200);
 //       }
 //     });
-//     closeButton.addEventListener('click', function (e) { // add listener for clicks on the close button 
+//     closeButton.addEventListener('click', function (e) { // add listener for clicks on the close button
 //       e.preventDefault();
 //       singleAdContainer.classList.add('hidden'); // Hide the expanded job ad
 //       mainWrapper.classList.remove('fadeout'); // Fade in the main content

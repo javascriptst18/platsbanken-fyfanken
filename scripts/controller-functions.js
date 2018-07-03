@@ -1,29 +1,26 @@
-/** 
- * 
+/**
+ *
  * CONTROLLER FUNCTIONS
- * 
+ *
  * All the functions that allow
  * the user to control the page via
- * the DOM. Clicking search, checking
- * a filter etc.
- * 
+ * the DOM. Event listeners, Clicking
+ * search, selecting a filter etc.
+ *
  * Functions that manipulate the view
  * of the DOM or work on data directly
  * should be in another file.
- * 
+ *
  */
 
-export let executeSearchBoxQuery = function () {
-  // Placeholder function
-  return updateJobsDisplayed();
+export function executeSearchBoxQuery() {
+    // Placeholder function
 }
 
-export let toggleFilterSetting = function (filterSetting) {
-  // Placeholder function
-  return updateJobsDisplayed();
+export function toggleFilterSetting() {
+    // Placeholder function
 }
 
-export let loadNextPage = function () {
-  // Placeholder function
-  return updateJobsDisplayed();
+export function loadNextPage() {
+    // Placeholder function
 }

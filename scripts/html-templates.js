@@ -1,16 +1,16 @@
 /**
- * 
+ *
  * Template literals for HTML insertions
  * into the DOM.
- * 
+ *
  * Not being used yet.
- * 
+ *
  */
 
 
-export let htmlTemplates = {
+export default {
 
-  article: `<article id=${''}>
+    article: `<article id=${''}>
               <h2>${''}</h2>
               <div class="ad-details-wrapper">
                 <span class="job-title"><i class="fas fa-tag"></i>${''}</span>
@@ -20,4 +20,4 @@ export let htmlTemplates = {
               </div>
               <button class="expand-job-ad"><i class="fas fa-plus-circle"></i>Öppna annons</button>
             </article>`,
-}
+};
