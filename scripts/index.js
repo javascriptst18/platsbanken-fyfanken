@@ -13,26 +13,28 @@ import htmlTemplates from './html-templates';
 import { translations, translate } from './translations';
 import userOptions from './user-options';
 import filterLists from './filter-lists';
-import { accessAPI, getFilterList, buildMatchingQueryString, initiate } from './model-functions';
-import updateJobsDisplayed from './view-functions';
+import { accessAPI, saveFilterList, buildMatchingQueryString, convertNameToObj, initiate } from './model-functions';
+import { updateJobsDisplayed, updateFiltersDisplayed } from './view-functions';
 import { executeSearchBoxQuery, toggleFilterSetting, loadNextPage } from './controller-functions';
 
 const PlatsbankenApp = {
-    userOptions,
-    filterLists,
-    staticQueryStrings,
-    htmlSelectors,
-    htmlTemplates,
-    translations,
-    translate,
-    accessAPI,
-    getFilterList,
-    buildMatchingQueryString,
-    updateJobsDisplayed,
-    executeSearchBoxQuery,
-    toggleFilterSetting,
-    loadNextPage,
-    initiate,
+  userOptions,
+  filterLists,
+  staticQueryStrings,
+  htmlSelectors,
+  htmlTemplates,
+  translations,
+  translate,
+  accessAPI,
+  saveFilterList,
+  buildMatchingQueryString,
+  convertNameToObj,
+  updateJobsDisplayed,
+  updateFiltersDisplayed,
+  executeSearchBoxQuery,
+  toggleFilterSetting,
+  loadNextPage,
+  initiate,
 };
 
 PlatsbankenApp.initiate(); // Loads regions and jobCategories from the API for the filter.

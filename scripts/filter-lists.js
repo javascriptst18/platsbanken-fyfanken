@@ -5,8 +5,6 @@
  */
 
 export default {
-    regionList: [],
-    countyList: [],
-    jobCategoriesList: [],
-    jobGroupList: [],
+  regionList: [],
+  jobCategoryList: [],
 };

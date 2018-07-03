@@ -13,28 +13,31 @@
  */
 
 export function accessAPI(queryString = '') {
-    return fetch(this.staticQueryStrings.baseURL + queryString)
-        .then(response => response.json())
-        .catch(error => console.log(error));
+  return fetch(this.staticQueryStrings.baseURL + queryString)
+    .then(response => response.json())
+    .catch(error => console.log(error));
 }
 
 export function buildMatchingQueryString() {
-    const queryString = '';
-    // Placeholder function
-    return queryString;
+  const queryString = '';
+  // Placeholder function
+  return queryString;
 }
 
-export function getFilterList(requestedList, parentListId = '') {
-    return this.accessAPI(this.staticQueryStrings[requestedList] + parentListId)
-        .then(response => response);
-}
-
-export function saveFilterList(filterList, app) {
-    const listName = app.translate(filterList.soklista.listnamn);
-    app.filterLists[`${listName}List`] = filterList.soklista.sokdata;
+export function saveFilterList(requestedList, parentItemName = '') {
+  return this.accessAPI(this.staticQueryStrings[requestedList])
+    .then((response) => {
+      this.translate(response.soklista.listnamn);
+      this.filterLists[`${requestedList}List`] = response.soklista.sokdata;
+    });
 }
 
 export function initiate() {
-    this.getFilterList('region').then(response => saveFilterList(response, this));
-    this.getFilterList('jobCategory').then(response => saveFilterList(response, this));
+  this.saveFilterList('region')
+    .then(this.saveFilterList('jobCategory'))
+    .then(this.updateFiltersDisplayed('region'));
+}
+
+export function convertNameToObj(inputString) {
+  return 1;
 }

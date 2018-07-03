@@ -14,13 +14,13 @@
  */
 
 export function executeSearchBoxQuery() {
-    // Placeholder function
+  // Placeholder function
 }
 
 export function toggleFilterSetting() {
-    // Placeholder function
+  // Placeholder function
 }
 
 export function loadNextPage() {
-    // Placeholder function
+  // Placeholder function
 }
