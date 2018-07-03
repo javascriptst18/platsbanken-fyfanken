@@ -1,3 +1,4 @@
+import '../scss/main.scss';
 const searchBox = document.querySelector('#searchBox');
 const searchForm = document.querySelector('#searchForm');
 const numberOfResults = document.querySelector('#numberOfResults');
@@ -26,7 +27,7 @@ const searchStrings = {
   initalSearchString: 'platsannonser/matchning?lanid=1&sida=1&antalrader=10'
 };
 
-let scrollPosition = "";
+let scrollPosition = '';
 
 // store data from fetch calls in variables
 const fetchData = {
@@ -52,7 +53,7 @@ function formatDate(input) {
 const insertArticles = arr => {
   // empty mainContainer before HTML injection
   mainContainer.innerHTML = '';
-  for (article of arr) {
+  for (let article of arr) {
     let lastDayApply = formatDate(article.sista_ansokningsdag);
     // html structure with data to inject
     let articleHtml = `
@@ -99,12 +100,12 @@ const appendInitalDataToHtml = async () => {
 appendInitalDataToHtml();
 
 // append data from fetched array to html dropdown element choosen with id
-appendItemToHtmlId = (listItemArr, whereToAppend) => {
+const appendItemToHtmlId = (listItemArr, whereToAppend) => {
   whereToAppend.innerHTML = '';
 
   // insert default option before genereating list
   whereToAppend.insertAdjacentHTML('beforeend', `<option>...</option>`);
-  for (listItem of listItemArr) {
+  for (let listItem of listItemArr) {
     let itemToAppend = `<option id="${listItem.id}" value="${listItem.namn}">${
       listItem.namn
     }</option>`;
@@ -146,7 +147,6 @@ idHandler.init = async () => {
   //  fetch list of regions
   let regionListResult = await callFetch(regionQueryString);
   idHandler.regionList = regionListResult.soklista.sokdata;
-  console.log(idHandler.regionList);
 
   await appendItemToHtmlId(idHandler.regionList, listOfRegions);
 };
@@ -163,7 +163,7 @@ idHandler.init = async () => {
  */
 
 idHandler.getListId = (stringValue, list) => {
-  for (item of list) {
+  for (let item of list) {
     if (item.namn.includes(stringValue)) {
       return item.id;
     }
@@ -219,7 +219,7 @@ formOfRegions.addEventListener('change', async e => {
     }`;
 
     let firstResult = await callFetch(communeString);
-    communeListResult = firstResult.soklista.sokdata;
+    let communeListResult = firstResult.soklista.sokdata;
 
     idHandler.communeList = communeListResult;
 
@@ -250,7 +250,6 @@ formOfCommunes.addEventListener('change', async e => {
 
     let workCategoryListResult = await callFetch(workCategoryQueryString);
     idHandler.workCategoryList = await workCategoryListResult.soklista.sokdata;
-    console.log(idHandler.workCategoryList);
 
     appendItemToHtmlId(idHandler.workCategoryList, listOfWorkCategory);
     formOfWorkCategory.style.display = 'block';
@@ -265,7 +264,6 @@ On choice listener fetches workcategories and append searchresult to DOM
 
 formOfWorkCategory.addEventListener('change', async e => {
   e.preventDefault();
-  console.log(listOfWorkCategory.value);
   if (listOfWorkCategory.value !== '...') {
     idHandler.workCategoryId = idHandler.getListId(
       listOfWorkCategory.value,
@@ -275,8 +273,6 @@ formOfWorkCategory.addEventListener('change', async e => {
 
     let workGroupResult = await callFetch(workGroupQueryString);
     idHandler.workGroupResultList = await workGroupResult.soklista.sokdata;
-
-    console.log(idHandler.workGroupResultList);
   }
 });
 
@@ -330,7 +326,7 @@ doSearch.addEventListener('click', async e => {
 
     insertArticles(regionAndWorkcategoryResult.matchningslista.matchningdata);
   } else {
-    regionCommuneAndWorkCustomSearchResult = await callFetch(
+    let regionCommuneAndWorkCustomSearchResult = await callFetch(
       customQueryStringWithCommuneAndWorkcategory
     );
 
@@ -356,13 +352,20 @@ const getJobDetails = async jobId => {
 
 // Add Event listener for clicks inside main container
 mainContainer.addEventListener('click', async e => {
-  if (e.target.classList.contains('expand-job-ad')) { // if open ad button
+  if (e.target.classList.contains('expand-job-ad')) {
+    // if open ad button
     const annonsID = e.target.parentElement.id; // get current ad id
     let annonsContent = await getJobDetails(annonsID); // fetch the full ad
     let annonsText = annonsContent.platsannons.annons.annonstext; // get the text for the ad
-    annonsText = '<p>' + annonsText.replace(/\n([ \t]*\n)+/g, '</p><p>') // make the text nice
-      .replace(/\n/g, '<br />') + '</p>';
-    let lastDayApply = formatDate(annonsContent.platsannons.ansokan.sista_ansokningsdag); // format the date for last application date
+    annonsText =
+      '<p>' +
+      annonsText
+        .replace(/\n([ \t]*\n)+/g, '</p><p>') // make the text nice
+        .replace(/\n/g, '<br />') +
+      '</p>';
+    let lastDayApply = formatDate(
+      annonsContent.platsannons.ansokan.sista_ansokningsdag
+    ); // format the date for last application date
     // create the full ad object
     let annonsObject = `
       <h2 class="single-rubrik">${
@@ -403,27 +406,32 @@ mainContainer.addEventListener('click', async e => {
     window.scrollTo(0, 0); // scroll to top
     mainWrapper.classList.toggle('fadeout'); // fade out the main content with css animation
     singleAdContainer.classList.toggle('hidden'); // show and slide the main ad container with css animation
-    document.addEventListener('keyup', event => { // add event listner for escape clicks for closing the ad
+    document.addEventListener('keyup', event => {
+      // add event listner for escape clicks for closing the ad
       // If Escape button key strokes...
       if (event.key === 'Escape' || event.keyCode === 27) {
         singleAdContainer.classList.add('hidden'); // ...close the expanded job ad
         mainWrapper.classList.remove('fadeout'); // fade in the content again
-        setTimeout(function () { // delay the execution of the following events
+        setTimeout(function() {
+          // delay the execution of the following events
           singleAdContainerInnerContent.innerHTML = ''; // remove the ad content to restore the original scroll length
-          window.scrollTo({ // Scroll back
+          window.scrollTo({
+            // Scroll back
             top: scrollPosition,
             behavior: 'smooth'
           });
         }, 200);
       }
     });
-    closeButton.addEventListener('click', function (e) { // add listener for clicks on the close button 
+    closeButton.addEventListener('click', function(e) {
+      // add listener for clicks on the close button
       e.preventDefault();
       singleAdContainer.classList.add('hidden'); // Hide the expanded job ad
       mainWrapper.classList.remove('fadeout'); // Fade in the main content
-      setTimeout(function () {
+      setTimeout(function() {
         singleAdContainerInnerContent.innerHTML = ''; // Empty the ad content
-        window.scrollTo({ // Scroll back
+        window.scrollTo({
+          // Scroll back
           top: scrollPosition,
           behavior: 'smooth'
         });

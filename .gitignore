@@ -1,7 +1,12 @@
-css
-.DS_Store
-.sass-cache
-.vscode
-*.log
 node_modules
+dist
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+*.log
+yarn.lock
+package-lock.json
