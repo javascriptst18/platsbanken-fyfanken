@@ -9,7 +9,6 @@ import '../scss/style.scss';
 
 import staticQueryStrings from './static-query-strings';
 import htmlSelectors from './html-selectors';
-import htmlTemplates from './html-templates';
 import { translations, translate } from './translations';
 import userOptions from './user-options';
 import filterLists from './filter-lists';
@@ -22,7 +21,6 @@ const PlatsbankenApp = {
   filterLists,
   staticQueryStrings,
   htmlSelectors,
-  htmlTemplates,
   translations,
   translate,
   accessAPI,
