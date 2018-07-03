@@ -35,6 +35,8 @@ export function saveFilterList(requestedList, parentItemName = '') {
 export function initiate() {
   this.saveFilterList('region')
     .then(this.saveFilterList('jobCategory'))
+    .then(this.toggleFilterSetting('Stockholms län'))
+    .then(this.toggleFilterSetting('Administration, ekonomi, juridik'))
 }
 
 export function convertNameToObj(inputString) {

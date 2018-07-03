@@ -8,6 +8,7 @@
  */
 
 export default {
+  allFilters: document.querySelectorAll('.filter-button'),
   searchBox: document.querySelector('#searchBox'),
   searchForm: document.querySelector('#searchForm'),
   numberOfResults: document.querySelector('#numberOfResults'),

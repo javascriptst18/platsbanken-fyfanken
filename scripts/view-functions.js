@@ -16,7 +16,7 @@ export function updateJobsDisplayed() {
   // Placeholder function
 }
 
-export function updateFiltersDisplayed(filterName) {
+export function updateFiltersDisplayed() {
   // Placeholder function
 }
 
